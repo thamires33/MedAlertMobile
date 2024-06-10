@@ -1,44 +1,31 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import css from './styles';
 
-const Header = ({ title, leftIcon, rightIcon, onLeftPress, onRightPress }) => {
-    return (
-        <View style={styles.header}>
-            <TouchableOpacity onPress={onLeftPress} style={styles.iconButton}>
-                <Image source={leftIcon} style={styles.icon} />
-            </TouchableOpacity>
-            <Text style={styles.title}>MedAlert</Text>
-            <TouchableOpacity onPress={onRightPress} style={styles.iconButton}>
-                <Image source={rightIcon} style={styles.icon} />
-            </TouchableOpacity>
+const AlarmScreen = () => {
+  const navigation = useNavigation();
+  
+  return (
+    <View style={css.container}>
+      <ScrollView style={css.scrollView}>
+        <View style={css.header}>
+          <TouchableOpacity onPress={() => navigation.openDrawer()} style={css.menuIconContainer}>
+            <Icon name="menu" size={24} color="#000" />
+          </TouchableOpacity>
+          <View style={css.headerTextContainer}>
+            <Text style={css.headerTextRegular}>MedAlert</Text>
+          </View>
+          <TouchableOpacity style={css.profileIconContainer}>
+            <Image
+              source={{ uri: 'https://via.placeholder.com/150' }} // Aqui você pode usar a imagem de perfil do usuário
+              style={css.profileIcon}
+            />
+          </TouchableOpacity>
         </View>
-    );
+      </ScrollView>
+    </View>
+  );
 };
-
-const styles = StyleSheet.create({
-    header: {
-        height: 60,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        backgroundColor: '#f8f8f8',
-        paddingHorizontal: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#e0e0e0',
-    },
-    title: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#333',
-    },
-    iconButton: {
-        padding: 10,
-    },
-    icon: {
-        width: 24,
-        height: 24,
-        resizeMode: 'contain',
-    },
-});
-
-export default Header;
+export default AlarmScreen;
