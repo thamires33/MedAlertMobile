@@ -1,6 +1,5 @@
-
 const db = require('./db');
-const Medico = require('./Medico');
+const Medico = require('./Medico'); 
 const Paciente = require('./Paciente');
 
 const Receita = db.sequelize.define('receita', {
@@ -14,7 +13,7 @@ const Receita = db.sequelize.define('receita', {
         type: db.Sequelize.INTEGER,
         allowNull: false,
         references: {
-            model: Medico,
+            model: Medico, 
             key: 'id_medico'
         }
     },
@@ -35,10 +34,10 @@ const Receita = db.sequelize.define('receita', {
     observacoes: {
         type: db.Sequelize.TEXT
     }
-}, {
-    freezeTableName: true
+}, { 
+    freezeTableName: true 
 });
 
-Receita.sync();
+//Receita.sync();
 
 module.exports = Receita;

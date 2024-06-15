@@ -1,4 +1,3 @@
-
 const db = require('./db');
 
 const Paciente = db.sequelize.define('paciente', { 
@@ -26,6 +25,6 @@ const Paciente = db.sequelize.define('paciente', {
 }, { freezeTableName: true });  
 
 // Sincronize o modelo Paciente
-Paciente.sync();
+//Paciente.sync();
 
 module.exports = Paciente; 

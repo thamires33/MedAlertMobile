@@ -23,6 +23,6 @@ const Medicamento = db.sequelize.define('medicamento', {
     freezeTableName: true
 });
 
-Medicamento.sync({ force: true });
+//Medicamento.sync({ force: true });
 
 module.exports = Medicamento;
