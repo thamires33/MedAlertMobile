@@ -1,3 +1,4 @@
+
 const db = require('./db');
 const Medico = require('./Medico');
 const Paciente = require('./Paciente');
@@ -15,8 +16,7 @@ const Receita = db.sequelize.define('receita', {
         references: {
             model: Medico,
             key: 'id_medico'
-        },
-    
+        }
     },
     fk_paciente: {
         type: db.Sequelize.INTEGER,
@@ -24,8 +24,7 @@ const Receita = db.sequelize.define('receita', {
         references: {
             model: Paciente,
             key: 'id_paciente'
-        },
-        
+        }
     },
     datePrescricao: {
         type: db.Sequelize.DATE
@@ -36,10 +35,9 @@ const Receita = db.sequelize.define('receita', {
     observacoes: {
         type: db.Sequelize.TEXT
     }
-}, { 
-    freezeTableName: true 
+}, {
+    freezeTableName: true
 });
-
 
 Receita.sync();
 

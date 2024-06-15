@@ -1,5 +1,5 @@
-const db = require('./db'); 
-const Receita = require('./Receita');
+
+const db = require('./db');
 
 const Paciente = db.sequelize.define('paciente', { 
     id_paciente: {  
@@ -25,6 +25,7 @@ const Paciente = db.sequelize.define('paciente', {
     }
 }, { freezeTableName: true });  
 
-Paciente.sync({force: true}); 
+// Sincronize o modelo Paciente
+Paciente.sync();
 
 module.exports = Paciente; 
