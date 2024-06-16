@@ -19,8 +19,8 @@ const styles = StyleSheet.create({
         width: 20,
     },
     textTitle: {
-        fontWeight:'bold',
-        fontSize:20,
+        fontWeight: 'bold',
+        fontSize: 20,
     },
     containerday: {
         justifyContent: "flex-start",
@@ -45,6 +45,35 @@ const styles = StyleSheet.create({
     blockText: {
         color: 'white',
         fontSize: 12,
+        fontWeight: 'bold',
+    },
+    card: {
+        backgroundColor: '#f0f0f0',
+        padding: 15,
+        borderRadius: 10,
+        marginVertical: 10,
+        marginHorizontal: 20,
+        borderWidth: 1, // Adicionando a borda
+        borderColor: '#cccccc', // Cor da borda
+    },
+    cardTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 5,
+    },
+    cardSubtitle: {
+        fontSize: 14,
+        marginBottom: 10,
+    },
+    takeButton: {
+        backgroundColor: 'blue',
+        borderRadius: 10,
+        alignItems: 'center',
+        paddingVertical: 5,
+    },
+    takeButtonText: {
+        color: 'white',
+        fontSize: 14,
         fontWeight: 'bold',
     },
     buttonContainer: {

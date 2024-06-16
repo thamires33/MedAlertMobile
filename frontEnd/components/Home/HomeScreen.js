@@ -1,30 +1,33 @@
 import { useEffect, useState } from "react";
 import { View, Text, Image, SafeAreaView, Keyboard, FlatList, StyleSheet, TouchableOpacity } from "react-native";
-import { Icon, ListItem } from "react-native-elements";
 import styles from "./styles";
 
 export default function Home() {
-
 
     const daysOfWeek = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
     const [remedios, setRemedios] = useState([]);
 
+    // Função para deletar remédio, mas não será usada nos testes visuais
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`http://localhost:8081/remedio/${id}`);
-
+            // Lógica de deleção aqui, mas será omitida para testes visuais
+            console.log(`Remédio com ID ${id} deletado`);
         } catch (err) {
             console.log(err);
         }
     };
 
+    // Função para buscar todos os remédios, usando dados mockados
     const fetchAllRemedios = async () => {
         try {
-            const res = await axios.get("http://localhost:8081/remedio");
-            setRemedios(res.data);
+            const mockRemedios = [
+                { id: 1, nome: 'Paracetamol', dosagem: 500, intervalo: 8, proxHorario: '10:00' },
+                { id: 2, nome: 'Ibuprofeno', dosagem: 400, intervalo: 6, proxHorario: '12:00' },
+                { id: 3, nome: 'Amoxicilina', dosagem: 250, intervalo: 12, proxHorario: '14:00' },
+            ];
+            setRemedios(mockRemedios);
             Keyboard.dismiss();
-
         } catch (err) {
             console.log(err);
         }
@@ -34,29 +37,17 @@ export default function Home() {
         fetchAllRemedios();
     }, []);
 
-    function getActions(data) {
-        return (
-            <>
-                <Button onPress={() => RemedioList.navigation.navigate('RemedioEdit', data)} type="clear"
-                    icon={<Icon name="edit" size={25} color="orange" />} />
-
-            </>
-        );
-    }
-
     function Listagem({ data }) {
         return (
-            <ListItem bottonDivider>
-                <ListItem.Content>
-                    <ListItem.Title>{data.nome}</ListItem.Title>
-                    <ListItem.Subtitle>{data.proxHorario}</ListItem.Subtitle>
-                </ListItem.Content>
-                {getActions(data)}
-            </ListItem>
+            <View style={styles.card}>
+                <Text style={styles.cardTitle}>{data.nome}  {data.dosagem}mg</Text>
+                <Text style={styles.cardSubtitle}>A cada {data.intervalo} horas - Prox às {data.proxHorario}</Text>
+                <TouchableOpacity style={styles.takeButton}>
+                    <Text style={styles.takeButtonText}>Tomar</Text>
+                </TouchableOpacity>
+            </View>
         );
     }
-
-
 
     return (
         <View style={styles.container}>
@@ -78,7 +69,7 @@ export default function Home() {
                 </View>
 
                 <FlatList
-                    keyExtractor={item => item.id}
+                    keyExtractor={item => item.id.toString()}
                     data={remedios}
                     renderItem={({ item }) => (<Listagem data={item} />)}
                 />
@@ -91,12 +82,4 @@ export default function Home() {
             </View>
         </View>
     );
-
-
-
-
-
-
-
-
-};
+}
