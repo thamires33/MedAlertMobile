@@ -11,7 +11,7 @@ const Medicamento = db.sequelize.define('medicamento', {
         type: db.Sequelize.TEXT
     },
     dosagem: {
-        type: db.Sequelize.STRING(10),allowNull:false
+        type: db.Sequelize.TEXT
     },
     fabricante: {
         type: db.Sequelize.TEXT
@@ -22,6 +22,7 @@ const Medicamento = db.sequelize.define('medicamento', {
 }, {
     freezeTableName: true
 });
-// Sincronize o modelo Medicamento - Comentar imediatamente após criado, senão gerará erros na importacao de outras tabelas que dependem dessa
+
 //Medicamento.sync({ force: true });
+
 module.exports = Medicamento;

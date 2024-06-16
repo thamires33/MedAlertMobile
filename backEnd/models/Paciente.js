@@ -26,5 +26,4 @@ const Paciente = db.sequelize.define('paciente', {
 
 // Sincronize o modelo Paciente - Comentar imediatamente após criado, senão gerará erros na importacao de outras tabelas que dependem dessa
 //Paciente.sync({force: true});
-
 module.exports = Paciente; 

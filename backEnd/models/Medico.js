@@ -27,3 +27,4 @@ const Medico = db.sequelize.define('medico', {
 //Medico.sync({ force: true });
 module.exports = Medico;
 
+
