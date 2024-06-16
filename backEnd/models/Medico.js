@@ -1,4 +1,3 @@
-
 const db = require('./db');
 //const Receita = require('./Receita');
 const Medico = db.sequelize.define('medico', {
@@ -24,7 +23,8 @@ const Medico = db.sequelize.define('medico', {
         type: db.Sequelize.INTEGER
     }
 }, { freezeTableName: true });
-Medico.sync({force: true}); 
+// Sincronize o modelo Medico - Comentar imediatamente após criado, senão gerará erros na importacao de outras tabelas que dependem dessa
+//Medico.sync({ force: true });
 module.exports = Medico;
 
 

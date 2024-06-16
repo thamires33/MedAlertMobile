@@ -39,6 +39,6 @@ const Receita = db.sequelize.define('receita', {
     freezeTableName: true
 });
 
-Receita.sync();
 
+//Receita.sync();
 module.exports = Receita;

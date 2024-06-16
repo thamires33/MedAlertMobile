@@ -16,5 +16,7 @@ const Farmacia = db.sequelize.define('farmacia', {
         type: db.Sequelize.INTEGER
     }
 }, { freezeTableName: true });
-Farmacia.sync({force: true}); 
+
+//Farmacia.sync({force: true});
+
 module.exports = Farmacia; 

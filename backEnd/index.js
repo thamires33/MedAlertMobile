@@ -10,6 +10,8 @@ const pacienteController = require('./controllers/PacienteController.js');
 const receitaController = require('./controllers/ReceitaController.js');
 const medicamentoController = require('./controllers/MedicamentoController.js');
 const farmaciaController = require('./controllers/FarmaciaController.js');
+const alarmeController=require('./controllers/AlarmeController.js');
+
 
 // Middlewares
 app.use(bodyParser.json());
@@ -24,6 +26,7 @@ app.use('/receita', receitaController);
 app.use('/medicamento', medicamentoController);
 app.use('/farmacia', farmaciaController);
 
+app.use('/alarme', alarmeController);
 
 //// Middleware de tratamento de erros
 //app.use((err, req, res, next) => {

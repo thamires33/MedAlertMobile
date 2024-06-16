@@ -1,4 +1,3 @@
-
 const express = require('express');
 const router = express.Router();
 //Importando o módulo do Paciente 
