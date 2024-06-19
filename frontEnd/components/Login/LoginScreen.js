@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, ImageBackground, Animated } from 'react-native';
+import { View, Text, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, ImageBackground, Animated, Alert } from 'react-native';
 import { CheckBox } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 import css from './styles';
@@ -8,8 +8,8 @@ import css from './styles';
 
 const LoginScreen = ({ navigation }) => {
     const [display, setDisplay] = useState('none');
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
+    const [senha, setSenha] = useState('');
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const fadeAnim = useState(new Animated.Value(0))[0];
@@ -39,12 +39,29 @@ const LoginScreen = ({ navigation }) => {
         setIsPasswordVisible(!isPasswordVisible);
     };
 
-    const handleLogin = () => {
+    // Validação do login
+    const handleLogin = async () => {
+        try {
+            const response = await fetch('http://localhost:8081/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, senha })
+            });
 
-        const isValidLogin = username === 'root' && password === 'root';
+            const data = await response.json();
 
-        if (!isValidLogin) {
-            setShowAlert(true);
+            if (data.success) {
+                // Navegar para a próxima página
+                console.log('Login bem-sucedido');
+            } else {
+                setShowAlert(true);
+                Alert.alert('Erro', data.message);
+            }
+        } catch (error) {
+            console.error('Erro ao fazer login:', error);
+            Alert.alert('Erro', 'Erro ao conectar ao servidor');
         }
     };
 
@@ -68,11 +85,11 @@ const LoginScreen = ({ navigation }) => {
             <View style={css.login__form}>
 
                 <TextInput style={css.login__input} placeholder='Usuário:'
-                    onChangeText={(text) => setUsername(text)} />
+                    onChangeText={(text) => setEmail(text)} />
 
                 <View style={css.passwordContainer}>
                     <TextInput style={css.login__input} placeholder='Senha:' secureTextEntry={!isPasswordVisible}
-                        onChangeText={(text) => setPassword(text)} />
+                        onChangeText={(text) => setSenha(text)} />
 
                     <TouchableOpacity onPress={handlePasswordVisibility} style={css.icon}>
                         <Icon
