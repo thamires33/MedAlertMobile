@@ -54,6 +54,7 @@ const LoginScreen = ({ navigation }) => {
 
             if (data.success) {
                 // Navegar para a próxima página
+                navigation.navigate('Home');
                 console.log('Login bem-sucedido');
             } else {
                 setShowAlert(true);
