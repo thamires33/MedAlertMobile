@@ -65,6 +65,14 @@ const styles = StyleSheet.create({
         fontSize: 14,
         marginBottom: 10,
     },
+    titleLine:{
+       
+        flexDirection:'row',
+        justifyContent:'space-between'
+    },
+    cardIcon:{
+        marginLeft:'auto',
+    },
     takeButton: {
         backgroundColor: 'blue',
         borderRadius: 10,

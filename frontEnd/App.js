@@ -7,7 +7,7 @@ import AlarmScreen from './components/Alarm/AlarmScreen';
 
 import { StatusBar } from 'expo-status-bar';
 import HomeScreen from './components/Home/HomeScreen';
-import VeiculoList from './components/Home/teste/teste';
+
 
 const Stack = createStackNavigator();
 
