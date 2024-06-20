@@ -1,6 +1,6 @@
 const db = require(`./db`);
 const Login = require('./Login');
-const Medicamento = require('./Medicamento');
+
 
 const Alarme = db.sequelize.define('alarme',{
     id_alarme: {
