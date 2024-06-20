@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const https = require('https');
+//const https = require('https');
 const app = express();
 const port = 8081;
 
@@ -12,6 +12,7 @@ const receitaController = require('./controllers/ReceitaController.js');
 const medicamentoController = require('./controllers/MedicamentoController.js');
 const farmaciaController = require('./controllers/FarmaciaController.js');
 const alarmeController=require('./controllers/AlarmeController.js');
+const loginController=require('./controllers/LoginController.js');
 
 
 // Middlewares
@@ -26,6 +27,7 @@ app.use('/paciente', pacienteController);
 app.use('/receita', receitaController);
 app.use('/medicamento', medicamentoController);
 app.use('/farmacia', farmaciaController);
+app.use('/login', loginController);
 
 app.use('/alarme', alarmeController);
 

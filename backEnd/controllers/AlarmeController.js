@@ -15,8 +15,8 @@ router.get('/', async (req, res) => {
 // Cadastra Alarme (POST)
 router.post('/', async (req, res) => {
     try {
-        const { fk_medicamento, posologia, intervalo_doses } = req.body;
-        const newAlarme = await Alarme.create({ fk_medicamento, posologia, intervalo_doses });
+        const { fk_usuario, nome_medicamento, posologia, intervalo_doses } = req.body;
+        const newAlarme = await Alarme.create({ fk_usuario,nome_medicamento, posologia, intervalo_doses });
         res.status(201).json({ message: 'Alarme cadastrado com sucesso', newAlarme });
     } catch (error) {
         res.status(500).json({ message: 'Erro ao cadastrar alarme', error });
@@ -54,9 +54,9 @@ router.delete('/:id', async (req, res) => {
 // Altera Alarme por ID (PUT)
 router.put('/:id', async (req, res) => {
     try {
-        const { fk_medicamento, posologia, intervalo_doses } = req.body;
+        const { fk_usuario,nome_medicamento, posologia, intervalo_doses } = req.body;
         const [rowsUpdated] = await Alarme.update(
-            { fk_medicamento, posologia, intervalo_doses },
+            { fk_medicamento,nome_medicamento, posologia, intervalo_doses },
             { where: { id_alarme: req.params.id } }
         );
         if (rowsUpdated) {

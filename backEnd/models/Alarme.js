@@ -1,4 +1,5 @@
 const db = require(`./db`);
+const Login = require('./Login');
 const Medicamento = require('./Medicamento');
 
 const Alarme = db.sequelize.define('alarme',{
@@ -8,12 +9,16 @@ const Alarme = db.sequelize.define('alarme',{
         allowNull: false,
         primaryKey: true
     },
-    fk_medicamento:{
+    fk_usuario:{
         type:db.Sequelize.INTEGER,
         allowNull:false,
         references:{
-            model: Medicamento,key: 'id_medicamento'
+            model: Login,key: 'id_usuario'
         }
+    },
+    nome_medicamento:{
+        type:db.Sequelize.STRING,
+
     },
     posologia:{
         type:db.Sequelize.INTEGER,
