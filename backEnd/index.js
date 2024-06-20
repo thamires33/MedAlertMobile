@@ -1,18 +1,23 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+//const https = require('https');
 const app = express();
 const port = 8081;
 
 
+// Importações dos controladores
 
-const alarmeController = require('./controllers/AlarmeController.js');
-const loginController = require('./controllers/LoginController.js');
+const alarmeController=require('./controllers/AlarmeController.js');
+const loginController=require('./controllers/LoginController.js');
+
+
 
 app.use(bodyParser.json());
 app.use(cors());
 
 app.get('/', (req, res) => res.send('API MedAlert está funcionando!'));
+
 
 
 app.use('/alarme', alarmeController);

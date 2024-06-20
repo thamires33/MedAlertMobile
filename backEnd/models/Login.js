@@ -23,4 +23,6 @@ const Login = db.sequelize.define('usuario', {
 
 //Login.sync({force: true});
 
+
 module.exports = Login;
+
