@@ -1,44 +1,72 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, Image, TextInput, Button, Switch, StyleSheet } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import styles from "./styles";
 
-const Header = ({ title, leftIcon, rightIcon, onLeftPress, onRightPress }) => {
-    return (
+const AlarmScreen = () => {
+  const navigation = useNavigation();
+  const [isAlarmEnabled, setIsAlarmEnabled] = useState(false);
+
+  const toggleSwitch = () => setIsAlarmEnabled(previousState => !previousState);
+
+  return (
+    <View style={styles.container}>
+      <ScrollView style={styles.scrollView}>
         <View style={styles.header}>
-            <TouchableOpacity onPress={onLeftPress} style={styles.iconButton}>
-                <Image source={leftIcon} style={styles.icon} />
-            </TouchableOpacity>
-            <Text style={styles.title}>MedAlert</Text>
-            <TouchableOpacity onPress={onRightPress} style={styles.iconButton}>
-                <Image source={rightIcon} style={styles.icon} />
-            </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.openDrawer()} style={styles.menuIconContainer}>
+            <Icon name="menu" size={24} color="#000" />
+          </TouchableOpacity>
+          <View style={styles.headerTextContainer}>
+            <Text style={styles.headerTextRegular}>MedAlert</Text>
+          </View>
+          <TouchableOpacity style={styles.profileIconContainer}>
+            <Image
+              source={{ uri: 'https://via.placeholder.com/150' }} // Imagem de perfil do usuário
+              style={styles.profileIcon}
+            />
+          </TouchableOpacity>
         </View>
-    );
+        
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>Cadastrar Remédios</Text>
+          <View style={styles.separator} />
+
+          <Text style={styles.label}>Medicamento</Text>
+          <TextInput style={styles.input} placeholder="Nome do medicamento" />
+
+          <View style={styles.row}>
+            <View style={styles.halfContainer}>
+              <Text style={styles.label}>Dosagem</Text>
+              <TextInput style={styles.input} placeholder="Dose" />
+            </View>
+            <View style={styles.halfContainer}>
+              <Text style={styles.label}>Unidade</Text>
+              <TextInput style={styles.input} placeholder="Unidade" />
+            </View>
+          </View>
+
+          <Text style={styles.label}>Frequência</Text>
+          <TextInput style={styles.input} placeholder="Frequência" />
+
+          <View style={styles.row}>
+            <View style={styles.halfContainer}>
+              <Text style={styles.label}>Horário</Text>
+              <TextInput style={styles.input} placeholder="Horário" />
+            </View>
+            <View style={styles.halfContainer}>
+              <Text style={styles.label}>Alarme</Text>
+              <Switch
+                onValueChange={toggleSwitch}
+                value={isAlarmEnabled}
+              />
+            </View>
+          </View>
+
+          <Button title="Cadastrar" onPress={() => { /* Lógica para cadastrar */ }} />
+        </View>
+      </ScrollView>
+    </View>
+  );
 };
-
-const styles = StyleSheet.create({
-    header: {
-        height: 60,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        backgroundColor: '#f8f8f8',
-        paddingHorizontal: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#e0e0e0',
-    },
-    title: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#333',
-    },
-    iconButton: {
-        padding: 10,
-    },
-    icon: {
-        width: 24,
-        height: 24,
-        resizeMode: 'contain',
-    },
-});
-
-export default Header;
+export default AlarmScreen;
