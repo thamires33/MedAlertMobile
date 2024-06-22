@@ -29,5 +29,5 @@ const Alarme = db.sequelize.define('alarme', {
     freezeTableName: true
 });
 
-//Alarme.sync({force:true});
+Alarme.sync({force:true});
 module.exports = Alarme;

@@ -3,7 +3,6 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 //const https = require('https');
 const app = express();
-const port = 8081;
 
 
 // Importações dos controladores
@@ -29,4 +28,4 @@ app.use((err, req, res, next) => {
     res.status(500).send('Algo deu errado!');
 });
 
-app.listen(port, () => console.log(`Servidor rodando na porta ${port}!`));
+module.exports = app;
