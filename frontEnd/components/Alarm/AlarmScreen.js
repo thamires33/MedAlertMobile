@@ -1,14 +1,48 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image, TextInput, Button, Switch, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Image, TextInput, Button, Switch, StyleSheet, Alert} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import styles from "./styles";
 
 const AlarmScreen = () => {
+  const [medicamento, setMedicamento] = useState('');
+  const [dosagem, setDosagem] = useState('');
+  const [unidade, setUnidade] = useState('');
+  const [frequencia, setFrequencia] = useState('');
   const navigation = useNavigation();
   const [isAlarmEnabled, setIsAlarmEnabled] = useState(false);
 
   const toggleSwitch = () => setIsAlarmEnabled(previousState => !previousState);
+
+  const handleCadastro = () => {
+    const data = {
+      medicamento,
+      dosagem,
+      unidade,
+      frequencia,
+    };
+
+    fetch('http://localhost:8081/alarme', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.message === 'Alarme cadastrado com sucesso') {
+          Alert.alert('Sucesso', 'Alarme cadastrado com sucesso');
+          console.log('Success:', data);
+        } else {
+          Alert.alert('Erro', data.message || 'Erro desconhecido');
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        Alert.alert('Erro', 'Erro ao conectar ao servidor');
+      });
+  };
 
   return (
     <View style={styles.container}>
@@ -27,27 +61,27 @@ const AlarmScreen = () => {
             />
           </TouchableOpacity>
         </View>
-        
+
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Cadastrar Remédios</Text>
           <View style={styles.separator} />
 
           <Text style={styles.label}>Medicamento</Text>
-          <TextInput style={styles.input} placeholder="Nome do medicamento" />
+          <TextInput style={styles.input} placeholder="Nome do medicamento" value={medicamento} onChangeText={setMedicamento} />
 
           <View style={styles.row}>
             <View style={styles.halfContainer}>
               <Text style={styles.label}>Dosagem</Text>
-              <TextInput style={styles.input} placeholder="Dose" />
+              <TextInput style={styles.input} placeholder="Dose" value={dosagem} onChangeText={setDosagem} />
             </View>
             <View style={styles.halfContainer}>
               <Text style={styles.label}>Unidade</Text>
-              <TextInput style={styles.input} placeholder="Unidade" />
+              <TextInput style={styles.input} placeholder="Unidade" value={unidade} onChangeText={setUnidade} />
             </View>
           </View>
 
           <Text style={styles.label}>Frequência</Text>
-          <TextInput style={styles.input} placeholder="Frequência" />
+          <TextInput style={styles.input} placeholder="Frequência" value={frequencia} onChangeText={setFrequencia} />
 
           <View style={styles.row}>
             <View style={styles.halfContainer}>
@@ -63,7 +97,7 @@ const AlarmScreen = () => {
             </View>
           </View>
 
-          <Button title="Cadastrar" onPress={() => { /* Lógica para cadastrar */ }} />
+          <Button title="Cadastrar" onPress={handleCadastro} />
         </View>
       </ScrollView>
     </View>
