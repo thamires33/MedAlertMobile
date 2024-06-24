@@ -1,28 +1,24 @@
-const db = require('./db');
-
-const Login = db.sequelize.define('usuario', {
-    id_usuario: {
-        type: db.Sequelize.INTEGER,
-        autoIncrement: true,
-        allowNull: false,
-        primaryKey: true
-    },
-    email: {
-        type: db.Sequelize.STRING,
-        allowNull: false,
-        unique: true,
-        validate: {
-            isEmail: true
-        }
-    },
-    senha: {
-        type: db.Sequelize.STRING,
-        allowNull: false
+'use strict';
+const {
+  Model
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+  class Login extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
     }
-}, { freezeTableName: true });
-
-//Login.sync({force: true});
-
-
-module.exports = Login;
-
+  }
+  Login.init({
+    email: DataTypes.STRING,
+    senha: DataTypes.STRING
+  }, {
+    sequelize,
+    modelName: 'Login',
+  });
+  return Login;
+};

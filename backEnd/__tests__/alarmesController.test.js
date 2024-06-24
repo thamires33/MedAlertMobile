@@ -5,7 +5,7 @@ const { Alarme } = require("../models");
 
 jest.mock("../models");
 
-describe('Alerme Controller Tests', () => {
+describe('Alarme Controller Tests', () => {
     //Teste para a rota GET '/'
     it('should get all alarmes', async () => {
         const expectedResult = ["test alarme 1", "test alarme 2"];
