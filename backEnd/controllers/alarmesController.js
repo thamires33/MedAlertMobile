@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Alarme = require('../models/Alarme');
+const { Alarme } = require('../models'); 
 
 // Busca todos os Alarmes (GET)
 router.get('/', async (req, res) => {
@@ -8,6 +8,7 @@ router.get('/', async (req, res) => {
         const alarmes = await Alarme.findAll();
         res.status(200).json(alarmes);
     } catch (error) {
+        console.error('Erro ao buscar alarmes:', error);
         res.status(500).json({ message: 'Erro ao buscar alarmes', error });
     }
 });
@@ -16,9 +17,10 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         const { fk_usuario, nome_medicamento, posologia, intervalo_doses } = req.body;
-        const newAlarme = await Alarme.create({ fk_usuario,nome_medicamento, posologia, intervalo_doses });
+        const newAlarme = await Alarme.create({ fk_usuario, nome_medicamento, posologia, intervalo_doses });
         res.status(201).json({ message: 'Alarme cadastrado com sucesso', newAlarme });
     } catch (error) {
+        console.error('Erro ao cadastrar alarme:', error);
         res.status(500).json({ message: 'Erro ao cadastrar alarme', error });
     }
 });
@@ -33,6 +35,7 @@ router.get('/:id', async (req, res) => {
             res.status(404).json({ message: 'Alarme não encontrado' });
         }
     } catch (error) {
+        console.error('Erro ao buscar alarme:', error);
         res.status(500).json({ message: 'Erro ao buscar alarme', error });
     }
 });
@@ -47,6 +50,7 @@ router.delete('/:id', async (req, res) => {
             res.status(404).json({ message: 'Alarme não encontrado' });
         }
     } catch (error) {
+        console.error('Erro ao excluir alarme:', error);
         res.status(500).json({ message: 'Erro ao excluir alarme', error });
     }
 });
@@ -54,9 +58,9 @@ router.delete('/:id', async (req, res) => {
 // Altera Alarme por ID (PUT)
 router.put('/:id', async (req, res) => {
     try {
-        const { fk_usuario,nome_medicamento, posologia, intervalo_doses } = req.body;
+        const { fk_usuario, nome_medicamento, posologia, intervalo_doses } = req.body;
         const [rowsUpdated] = await Alarme.update(
-            { fk_medicamento,nome_medicamento, posologia, intervalo_doses },
+            { fk_usuario, nome_medicamento, posologia, intervalo_doses },
             { where: { id_alarme: req.params.id } }
         );
         if (rowsUpdated) {
@@ -65,6 +69,7 @@ router.put('/:id', async (req, res) => {
             res.status(404).json({ message: 'Alarme não encontrado' });
         }
     } catch (error) {
+        console.error('Erro ao atualizar alarme:', error);
         res.status(500).json({ message: 'Erro ao atualizar alarme', error });
     }
 });

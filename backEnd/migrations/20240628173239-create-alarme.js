@@ -10,10 +10,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       fk_usuario: {
-        type: Sequelize.INTEGER,
-        allowNull:false,
-        references:{model:'logins',key:'id'},
-        onDelete:'CASCADE'
+        type: Sequelize.INTEGER, references:{model:'usuarios', key:'id'}, onDelete:'CASCADE'
       },
       nome_medicamento: {
         type: Sequelize.STRING

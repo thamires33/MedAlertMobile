@@ -13,9 +13,42 @@ describe('Alarme Controller Tests', () => {
 
         const response = await request(app).get('/alarme');
         expect(response.status).toBe(200);
-        expect(response.body).toBe(expectedResult);
+        expect(response.body).toStrictEqual(expectedResult);
     });
+
+    //Teste para a rota POST
+    it('should create a new alarme', async () => {
+        const alarmeData = {
+            name: "New Alarme",
+            description: "This is a test alarme"
+        };
+
+        const createdAlarme = {
+            id: 1,
+            name: alarmeData.name,
+            description: alarmeData.description
+        };
+
+        Alarme.create = jest.fn((data) => {
+            return Promise.resolve({ ...createdAlarme });
+        });
+
+        const response = await request(app)
+            .post('/alarme')
+            .send(alarmeData);
+
+        expect(response.status).toBe(201); // 201 Created
+        expect(response.body).toEqual({
+            message: "Alarme cadastrado com sucesso",
+            newAlarme: createdAlarme});
+    });
+
+
+
+
 });
+
+
 
 // Create
 //describe('Post /alarm', () => {

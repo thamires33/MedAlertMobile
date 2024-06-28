@@ -1,31 +1,23 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const cors = require('cors');
-//const https = require('https');
+//protocolo de comunicacão entre apis e outros serviços cors
+//CORS: autoriza para qualquer tipo de serviço (front-end, outras apis,etc)
+const cors = require('cors')
 const app = express();
-
-
-// Importações dos controladores
-
-const alarmeController=require('./controllers/AlarmeController.js');
-const loginController=require('./controllers/LoginController.js');
-
-
-
+//importações
+const usuario = require('./controllers/usuariosController.js');
+const alarme = require('./controllers/alarmesController.js');
+// const autor = require('./controllers/autorController.js');
+// const livro = require('./controllers/livroController.js');
+//Rotas
 app.use(bodyParser.json());
-app.use(cors());
-
-app.get('/', (req, res) => res.send('API MedAlert está funcionando!'));
-
-
-
-app.use('/alarme', alarmeController);
-app.use('/login', loginController);
-
-// Middleware de tratamento de erros
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Algo deu errado!');
-});
-
-module.exports = app;
+//Função CORS para a autorização do uso da API
+app.use(cors())
+app.get('/', (req, res)=> res.send('Estou aqui'))
+// app.use('/editora', editora);
+// app.use('/categoria', categoria);
+app.use('/usuario', usuario);
+app.use('/alarme', alarme);
+// app.use('/autor', autor);
+// app.use('/livro', livro);
+module.exports=app;
