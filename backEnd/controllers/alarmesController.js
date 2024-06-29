@@ -21,7 +21,7 @@ router.post('/', async (req, res) => {
         res.status(201).json({ message: 'Alarme cadastrado com sucesso', newAlarme });
     } catch (error) {
         console.error('Erro ao cadastrar alarme:', error);
-        res.status(500).json({ message: 'Erro ao cadastrar alarme', error });
+        res.status(500).json({ message: 'Erro ao cadastrar alarme', error:error.message });
     }
 });
 

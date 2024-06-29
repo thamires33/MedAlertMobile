@@ -8,12 +8,12 @@ jest.mock("../models");
 describe('Alarme Controller Tests', () => {
     //Teste para a rota GET '/'
     it('should get all alarmes', async () => {
-        const expectedResult = ["test alarme 1", "test alarme 2"];
-        Alarme.findAll = jest.fn(() => { return expectedResult; });
+        const expectedResult = ["test alarme 1", "test alarme 2"];  //arrange
+        Alarme.findAll = jest.fn(() => { return expectedResult; }); //act
 
         const response = await request(app).get('/alarme');
-        expect(response.status).toBe(200);
-        expect(response.body).toStrictEqual(expectedResult);
+        expect(response.status).toBe(200);                          //assert
+        expect(response.body).toStrictEqual(expectedResult);        //assert
     });
 
     //Teste para a rota POST
@@ -43,9 +43,28 @@ describe('Alarme Controller Tests', () => {
             newAlarme: createdAlarme});
     });
 
+    it('Verifica se o erro do cadastro de alarme esta retornando o codigo 500', async ()=>{
+        const alarmeData = {
+            name: "New Alarme",
+            description: "This is a test alarme"
+        };
 
+        
 
+        Alarme.create = jest.fn((data) => {
+            throw Error("Erro de teste")
+        });
 
+        const response = await request(app)
+            .post('/alarme')
+            .send(alarmeData);
+
+        expect(response.status).toBe(500); // 500 server error
+        expect(response.body).toEqual({
+            message: "Erro ao cadastrar alarme",
+            error:"Erro de teste"
+        });
+    });
 });
 
 
