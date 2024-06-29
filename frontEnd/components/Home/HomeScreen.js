@@ -1,51 +1,19 @@
 import { useEffect, useState } from "react";
-import { View, Text, Image, SafeAreaView, Keyboard, FlatList, StyleSheet, TouchableOpacity } from "react-native";
-import { Button, Icon, ListItem } from "react-native-elements";
+import { View, Text, Image, SafeAreaView, Keyboard, FlatList, TouchableOpacity, ScrollView } from "react-native";
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useNavigation } from '@react-navigation/native';
 import styles from "./styles";
 import axios from "axios";
 
-export default function Home() {
-
+const HomeScreen = () => {
+    const navigation = useNavigation();
     const daysOfWeek = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-    //Variável que recebe os dados da API
     const [alarmes, setAlarmes] = useState([]);
 
-    // Função para deletar remédio, mas não será usada nos testes visuais
-    const handleDelete = async (id) => {
-        try {
-            // Lógica de deleção aqui, mas será omitida para testes visuais
-            console.log(`Remédio com ID ${id} deletado`);
-        } catch (err) {
-            console.log(err);
-        }
-    };
-
-    // Função para buscar todos os alarmes --- Não funcional no momento, manter comentada até ser resolvida
-    // const fetchAllAlarmes = async () => {
-    //     try {
-    //         const res=await axios.get("http://localhost:8081/alarme");           
-    //         setAlarmes(res.data);
-    //         Keyboard.dismiss();
-    //     } catch (err) {
-    //         console.log(err);
-    //     }
-    // };
-
-    //Função que inicia a listagem ao abrir o App
-    useEffect(() => {
-        fetchAllAlarmes();
-    }, []);
-
-    // Função para buscar todos os alarmes, usando dados nockados para avaliação visual
     const fetchAllAlarmes = async () => {
         try {
-            // Dados mockados
-            const mockData = [
-                { id: '1', nome: 'Cardil', dosagem: 20, intervalo: 8, proxHorario: '8:00am' },
-                { id: '2', nome: 'Omeprazol', dosagem: 10, intervalo: 8, proxHorario: '8:00am' },
-                { id: '3', nome: 'Frudilat', dosagem: 15, intervalo: 8, proxHorario: '8:00am' },
-            ];
-            setAlarmes(mockData);
+            const response = await axios.get('http://localhost:8081/alarme');
+            setAlarmes(response.data);
             Keyboard.dismiss();
         } catch (err) {
             console.log(err);
@@ -56,18 +24,18 @@ export default function Home() {
         fetchAllAlarmes();
     }, []);
 
-
     function Listagem({ data }) {
         return (
 
             <View style={styles.card}>
                 <View style={styles.titleLine}>
-                    <Text style={styles.cardTitle}>{data.nome}  {data.dosagem}mg</Text>
+                    <Text style={styles.cardTitle}>{data.medicamento} {data.dosagem}mg</Text>
                     <TouchableOpacity>
-                        <Icon name='edit' style={styles.cardIcon}>Teste</Icon>
+                        <Icon name='edit' style={styles.cardIcon}>Editar</Icon>
                     </TouchableOpacity>
                 </View>
-                <Text style={styles.cardSubtitle}>A cada {data.intervalo} horas - Prox às {data.proxHorario}</Text>
+                <Text style={styles.cardSubtitle}>Frequência: A cada {data.frequencia} horas</Text>
+                {/* Adicione mais campos conforme necessário */}
                 <TouchableOpacity style={styles.takeButton}>
                     <Text style={styles.takeButtonText}>Tomar</Text>
                 </TouchableOpacity>
@@ -79,33 +47,39 @@ export default function Home() {
         <View style={styles.container}>
             <SafeAreaView style={styles.safeArea}>
                 <View style={styles.header}>
-                    <Image source={require('../../assets/menuIcon.png')} style={styles.headerIcon} />
-                    <Text style={styles.textTitle}>MedAlert</Text>
-                    <Image source={require('../../assets/profile.png')} />
-                </View>
-
-                <View style={styles.containerday}>
-                    <View style={styles.blockContainer}>
-                        {daysOfWeek.map((day, index) => (
-                            <View key={index} style={styles.coloredBlock}>
-                                <Text style={styles.blockText}>{day}</Text>
-                            </View>
-                        ))}
+                    <TouchableOpacity onPress={() => navigation.openDrawer()} style={styles.menuIconContainer}>
+                        <Icon name="menu" size={24} color="#000" />
+                    </TouchableOpacity>
+                    <View style={styles.headerTextContainer}>
+                        <Text style={styles.headerTextRegular}>MedAlert</Text>
                     </View>
+                    <TouchableOpacity style={styles.profileIconContainer}>
+                        <Image
+                            source={{ uri: 'https://via.placeholder.com/150' }}
+                            style={styles.profileIcon}
+                        />
+                    </TouchableOpacity>
                 </View>
 
                 <FlatList
-                    keyExtractor={item => item.id}
+                    keyExtractor={(item, index) => index.toString()}
                     data={alarmes}
-                    renderItem={({ item }) => (<Listagem data={item} />)}
+                    renderItem={({ item }) => <Listagem data={item} />}
+                    contentContainerStyle={styles.flatListContentContainer}
                 />
+
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                        style={styles.addButton}
+                        onPress={() => navigation.navigate('Alarm')}
+                    >
+                        <Text style={styles.txtAddButton}>Adicionar Remédio</Text>
+                    </TouchableOpacity>
+                </View>
+
             </SafeAreaView>
 
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.addButton}>
-                    <Text style={styles.txtAddButton}>Adicionar Remédio</Text>
-                </TouchableOpacity>
-            </View>
         </View>
     );
 }
+export default HomeScreen;
