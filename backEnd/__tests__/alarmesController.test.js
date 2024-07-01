@@ -43,6 +43,7 @@ describe('Alarme Controller Tests', () => {
             newAlarme: createdAlarme});
     });
 
+    //Teste de erro na rota POST
     it('Verifica se o erro do cadastro de alarme esta retornando o codigo 500', async ()=>{
         const alarmeData = {
             name: "New Alarme",
@@ -64,6 +65,27 @@ describe('Alarme Controller Tests', () => {
             message: "Erro ao cadastrar alarme",
             error:"Erro de teste"
         });
+    });
+
+    //Teste da rota GET com id
+    it('should get alarme with specific id', async () => {
+        const expectedResult = 1;  //arrange
+        Alarme.findByPk = jest.fn(() => { return expectedResult; }); //act
+
+        const response = await request(app).get('/alarme/${id}');
+        // expect(response.status).toBe(200);                          //assert
+        expect(response.body).toStrictEqual(expectedResult);        //assert
+    });
+
+    //Teste do endPoint delete
+    it('should delete the alarm by ID and return a success message', async () => {
+        Alarme.destroy.mockResolvedValue(1); // Simula exclusão bem-sucedida
+
+        const id = '123';
+        const response = await request(app).delete(`/alarme/${id}`);
+        
+        expect(response.status).toBe(200);
+        expect(response.body).toHaveProperty('message', 'Alarme excluído com sucesso');
     });
 });
 
