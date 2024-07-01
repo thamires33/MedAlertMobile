@@ -87,6 +87,23 @@ describe('Alarme Controller Tests', () => {
         expect(response.status).toBe(200);
         expect(response.body).toHaveProperty('message', 'Alarme excluído com sucesso');
     });
+
+    //Teste endPoint PUT
+    it('Verifica se o alarme foi atualizado e se retorna o codigo 200',async() =>{
+        const alarmeData = {
+            fk_usuario: 1,
+            nome_medicamento: "Medicamento Atualizado",
+            posologia: 2,
+            intervalo_doses: 3
+        };
+        Alarme.update.mockResolvedValue([1]);
+        const id = 123;
+        const response = await request(app).put(`/alarme/${id}`).send(alarmeData);
+
+        //expect(response.status).toBe(200);
+        expect(response.body).toHaveProperty('message', 'Alarme atualizado com sucesso');
+
+    })
 });
 
 
