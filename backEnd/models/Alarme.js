@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Alarme.init({
-    fk_usuario: DataTypes.INTEGER,
+    // fk_usuario: DataTypes.INTEGER,
     nome_medicamento: DataTypes.STRING,
     posologia: DataTypes.STRING,
     intervalo_doses: DataTypes.STRING

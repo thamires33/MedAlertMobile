@@ -9,9 +9,9 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      fk_usuario: {
-        type: Sequelize.INTEGER, references:{model:'usuarios', key:'id'}, onDelete:'CASCADE'
-      },
+      // fk_usuario: {
+      //   type: Sequelize.INTEGER, references:{model:'usuarios', key:'id'}, onDelete:'CASCADE'
+      // },
       nome_medicamento: {
         type: Sequelize.STRING
       },
