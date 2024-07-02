@@ -81,7 +81,7 @@ describe('Alarme Controller Tests', () => {
     it('should delete the alarm by ID and return a success message', async () => {
         Alarme.destroy.mockResolvedValue(1); // Simula exclusão bem-sucedida
 
-        const id = '123';
+        const id = 1;
         const response = await request(app).delete(`/alarme/${id}`);
         
         expect(response.status).toBe(200);
@@ -97,10 +97,10 @@ describe('Alarme Controller Tests', () => {
             intervalo_doses: 3
         };
         Alarme.update.mockResolvedValue([1]);
-        const id = 123;
+        const id = 1;
         const response = await request(app).put(`/alarme/${id}`).send(alarmeData);
 
-        //expect(response.status).toBe(200);
+        expect(response.status).toBe(200);
         expect(response.body).toHaveProperty('message', 'Alarme atualizado com sucesso');
 
     })
