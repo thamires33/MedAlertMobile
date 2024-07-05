@@ -1,26 +1,27 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-//const https = require('https');
+const passport = require('passport'); // Importar o passport
 const app = express();
 const port = 8081;
 
+// Importar a configuração do passport
+require('./config/passport')(passport);
 
 // Importações dos controladores
-
-const alarmeController=require('./controllers/AlarmeController.js');
-const loginController=require('./controllers/LoginController.js');
-
-
+const alarmeController = require('./controllers/AlarmeController.js');
+const loginController = require('./controllers/LoginController.js');
 
 app.use(bodyParser.json());
 app.use(cors());
 
+// Inicializar o passport
+app.use(passport.initialize());
+
 app.get('/', (req, res) => res.send('API MedAlert está funcionando!'));
 
-
-
-app.use('/alarme', alarmeController);
+// Proteger rotas com JWT
+app.use('/alarme', passport.authenticate('jwt', { session: false }), alarmeController);
 app.use('/login', loginController);
 
 // Middleware de tratamento de erros

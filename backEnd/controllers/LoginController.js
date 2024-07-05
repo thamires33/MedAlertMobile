@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const Usuario = require('../models/Login');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const keys = require('../config/keys'); // Arquivo onde você guarda suas chaves secretas
+const Usuario = require('../models/Login'); // Ajuste o caminho conforme necessário
 
 router.post('/', async (req, res) => {
     const { email, senha } = req.body;
@@ -12,13 +15,33 @@ router.post('/', async (req, res) => {
     try {
         console.log(`Tentando login para email: ${email}`);
 
-        const usuario = await Usuario.findOne({ where: { email, senha } });
+        const usuario = await Usuario.findOne({ where: { email } });
 
-        if (usuario) {
-            console.log('Usuário encontrado:', usuario);
-            return res.status(200).json({ success: true, message: 'Login bem-sucedido' });
+        if (!usuario) {
+            return res.status(401).json({ success: false, message: 'Credenciais inválidas' });
+        }
+
+        const isMatch = await bcrypt.compare(senha, usuario.senha);
+
+        if (isMatch) {
+            const payload = {
+                id: usuario.id,
+                email: usuario.email
+            };
+
+            jwt.sign(
+                payload,
+                keys.secretOrKey,
+                { expiresIn: 3600 },
+                (err, token) => {
+                    if (err) throw err;
+                    res.json({
+                        success: true,
+                        token: 'Bearer ' + token
+                    });
+                }
+            );
         } else {
-            console.log('Credenciais inválidas para email:', email);
             return res.status(401).json({ success: false, message: 'Credenciais inválidas' });
         }
     } catch (error) {

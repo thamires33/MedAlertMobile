@@ -49,10 +49,12 @@ const LoginScreen = ({ navigation }) => {
                 },
                 body: JSON.stringify({ email, senha })
             });
-
+    
             const data = await response.json();
-
+    
             if (data.success) {
+                // Armazenar o token JWT
+                AsyncStorage.setItem('token', data.token);
                 // Navegar para a próxima página
                 navigation.navigate('Home');
                 console.log('Login bem-sucedido');
@@ -63,6 +65,24 @@ const LoginScreen = ({ navigation }) => {
         } catch (error) {
             console.error('Erro ao fazer login:', error);
             Alert.alert('Erro', 'Erro ao conectar ao servidor');
+        }
+    };
+
+    const fetchProtectedData = async () => {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            const response = await fetch('http://localhost:8081/rota_protegida', {
+                method: 'GET',
+                headers: {
+                    'Authorization': token,
+                    'Content-Type': 'application/json'
+                }
+            });
+    
+            const data = await response.json();
+            console.log(data);
+        } catch (error) {
+            console.error('Erro ao buscar dados protegidos:', error);
         }
     };
 
