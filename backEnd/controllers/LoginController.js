@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const keys = require('../config/keys'); // Arquivo onde você guarda suas chaves secretas
-const Usuario = require('../models/Login'); // Ajuste o caminho conforme necessário
+const keys = require('../config/keys'); 
+const Usuario = require('../models/Login'); 
 
 router.post('/', async (req, res) => {
     const { email, senha } = req.body;
@@ -21,14 +21,17 @@ router.post('/', async (req, res) => {
             return res.status(401).json({ success: false, message: 'Credenciais inválidas' });
         }
 
+        //const salt=await bcrypt.genSalt(10);
+        //console.log(await bcrypt.hash(senha, salt));
+
         const isMatch = await bcrypt.compare(senha, usuario.senha);
 
         if (isMatch) {
             const payload = {
-                id: usuario.id,
+                id: usuario.id_usuario,
                 email: usuario.email
             };
-
+            console.log(payload);
             jwt.sign(
                 payload,
                 keys.secretOrKey,
@@ -37,7 +40,7 @@ router.post('/', async (req, res) => {
                     if (err) throw err;
                     res.json({
                         success: true,
-                        token: 'Bearer ' + token
+                        token
                     });
                 }
             );

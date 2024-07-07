@@ -23,7 +23,6 @@ app.get('/', (req, res) => res.send('API MedAlert está funcionando!'));
 // Proteger rotas com JWT
 app.use('/alarme', passport.authenticate('jwt', { session: false }), alarmeController);
 app.use('/login', loginController);
-
 // Middleware de tratamento de erros
 app.use((err, req, res, next) => {
     console.error(err.stack);
