@@ -1,20 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, ImageBackground, Animated, Alert } from 'react-native';
-import { CheckBox } from 'react-native-elements';
+import { View, Text, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, Animated, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import css from './styles';
 
-
-
-const LoginScreen = ({ navigation }) => {
+const CadastroScreen = ({ navigation }) => {
     const [display, setDisplay] = useState('none');
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
+    const [confirmSenha, setConfirmSenha] = useState('');
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const fadeAnim = useState(new Animated.Value(0))[0];
-    const [isChecked, setIsChecked] = useState(false);
 
     //#region card de alerta
     useEffect(() => {
@@ -40,77 +37,64 @@ const LoginScreen = ({ navigation }) => {
         setIsPasswordVisible(!isPasswordVisible);
     };
 
-    // Validação do login
-    const handleLogin = async () => {
+    const handleConfirmPasswordVisibility = () => {
+        setIsConfirmPasswordVisible(!isConfirmPasswordVisible);
+    };
+
+    const handleCadastro = async () => {
+        if (senha !== confirmSenha) {
+            setShowAlert(true);
+            Alert.alert('Erro', 'As senhas não coincidem');
+            return;
+        }
+
         try {
-            const response = await fetch('http://localhost:8081/login', {
+            const response = await fetch('http://localhost:8081/cadastro', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ email, senha })
             });
-
+    
             const data = await response.json();
-
+    
             if (data.success) {
-                // Armazenar o token JWT
-                await AsyncStorage.setItem('token', data.token); // Adicionado await
-                // Navegar para a próxima página
-                navigation.navigate('Home');
-                console.log('Login bem-sucedido');
+                Alert.alert('Sucesso', 'Cadastro realizado com sucesso');
+                navigation.navigate('Login');
             } else {
                 setShowAlert(true);
                 Alert.alert('Erro', data.message);
             }
         } catch (error) {
-            console.error('Erro ao fazer login:', error);
+            console.error('Erro ao fazer cadastro:', error);
             Alert.alert('Erro', 'Erro ao conectar ao servidor');
-        }
-    };
-
-    const fetchProtectedData = async () => {
-        try {
-            const token = await AsyncStorage.getItem('token');
-            const response = await fetch('http://localhost:8081/rota_protegida', {
-                method: 'GET',
-                headers: {
-                    'Authorization': token,
-                    'Content-Type': 'application/json'
-                }
-            });
-    
-            const data = await response.json();
-            console.log(data);
-        } catch (error) {
-            console.error('Erro ao buscar dados protegidos:', error);
         }
     };
 
     return (
         <KeyboardAvoidingView style={[css.container, css.darkbg]}>
 
-            <View style={css.logo_login}>
+            <View style={css.logo_cadastro}>
                 <Image
                     source={require('../../assets/Login/logo.png')}
                     style={css.logo}
                 />
-                <Text style={css.login_title}>MedAlert</Text>
+                <Text style={css.cadastro_title}>MedAlert</Text>
             </View>
 
             {showAlert && (
                 <Animated.View style={[css.alertContainer, { opacity: fadeAnim }]}>
-                    <Text style={css.alertText}>Usuário ou senha inválidos!</Text>
+                    <Text style={css.alertText}>Erro ao fazer cadastro!</Text>
                 </Animated.View>
             )}
 
-            <View style={css.login__form}>
-
-                <TextInput style={css.login__input} placeholder='Usuário:'
+            <View style={css.cadastro__form}>
+                <TextInput style={css.cadastro__input} placeholder='Usuário:'
                     onChangeText={(text) => setEmail(text)} />
 
                 <View style={css.passwordContainer}>
-                    <TextInput style={css.login__input} placeholder='Senha:' secureTextEntry={!isPasswordVisible}
+                    <TextInput style={css.cadastro__input} placeholder='Senha:' secureTextEntry={!isPasswordVisible}
                         onChangeText={(text) => setSenha(text)} />
 
                     <TouchableOpacity onPress={handlePasswordVisibility} style={css.icon}>
@@ -122,26 +106,25 @@ const LoginScreen = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
 
-                <TouchableOpacity style={css.login__button} onPress={handleLogin}>
-                    <Text style={css.login__buttonText}>Entrar</Text>
-                </TouchableOpacity>
+                <View style={css.passwordContainer}>
+                    <TextInput style={css.cadastro__input} placeholder='Confirmar Senha:' secureTextEntry={!isConfirmPasswordVisible}
+                        onChangeText={(text) => setConfirmSenha(text)} />
 
-                <View style={css.dividerContainer}>
-                    <View style={css.divider} />
-                    <Text style={css.dividerText}> OU CONTINUE COM </Text>
-                    <View style={css.divider} />
+                    <TouchableOpacity onPress={handleConfirmPasswordVisibility} style={css.icon}>
+                        <Icon
+                            name={isConfirmPasswordVisible ? 'eye-off' : 'eye'}
+                            size={24}
+                            color="gray"
+                        />
+                    </TouchableOpacity>
                 </View>
 
-                <TouchableOpacity style={css.googleButton} onPress={handleLogin}>
-                    <Image
-                        source={require('../../assets/Login/google.png')}
-                        style={css.googleIcon}
-                    />
-                    <Text style={css.googleButtonText}>Conta Google</Text>
+                <TouchableOpacity style={css.cadastro__button} onPress={handleCadastro}>
+                    <Text style={css.cadastro__buttonText}>Cadastrar</Text>
                 </TouchableOpacity>
                 
                 <View style={css.checkboxContainer}>
-                    <Text style={css.checkboxText2}> Clicando em entrar, você concorda com nossos
+                    <Text style={css.checkboxText2}> Clicando em cadastrar, você concorda com nossos
                     <Text style={css.checkboxText1}> Termos de Serviço </Text> e
                     <Text style={css.checkboxText1}> Política de Privacidade </Text> </Text>
                 </View>
@@ -151,4 +134,4 @@ const LoginScreen = ({ navigation }) => {
     );
 };
 
-export default LoginScreen; 
+export default CadastroScreen;

@@ -1,22 +1,36 @@
-import { useEffect, useState } from "react";
-import { View, Text, Image, SafeAreaView, Keyboard, FlatList, TouchableOpacity, ScrollView } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, Image, SafeAreaView, Keyboard, FlatList, TouchableOpacity } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
-import styles from "./styles";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
+import styles from "./styles";
 
 const HomeScreen = () => {
     const navigation = useNavigation();
-    const daysOfWeek = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
     const [alarmes, setAlarmes] = useState([]);
 
     const fetchAllAlarmes = async () => {
         try {
-            const response = await axios.get('http://localhost:8081/alarme');
+            const token = await AsyncStorage.getItem('token');
+            if (!token) {
+                throw new Error('Token não encontrado');
+            }
+
+            const response = await axios.get('http://localhost:8081/alarme', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
             setAlarmes(response.data);
             Keyboard.dismiss();
         } catch (err) {
-            console.log(err);
+            console.log('Erro ao buscar alarmes:', err);
+            if (err.response && err.response.status === 401) {
+                // Token inválido ou expirado, redirecionar para a tela de login
+                navigation.navigate('Login');
+            }
         }
     };
 
@@ -26,7 +40,6 @@ const HomeScreen = () => {
 
     function Listagem({ data }) {
         return (
-
             <View style={styles.card}>
                 <View style={styles.titleLine}>
                     <Text style={styles.cardTitle}>{data.medicamento} {data.dosagem}mg</Text>
@@ -35,7 +48,6 @@ const HomeScreen = () => {
                     </TouchableOpacity>
                 </View>
                 <Text style={styles.cardSubtitle}>Frequência: A cada {data.frequencia} horas</Text>
-                {/* Adicione mais campos conforme necessário */}
                 <TouchableOpacity style={styles.takeButton}>
                     <Text style={styles.takeButtonText}>Tomar</Text>
                 </TouchableOpacity>
@@ -76,10 +88,9 @@ const HomeScreen = () => {
                         <Text style={styles.txtAddButton}>Adicionar Remédio</Text>
                     </TouchableOpacity>
                 </View>
-
             </SafeAreaView>
-
         </View>
     );
 }
+
 export default HomeScreen;

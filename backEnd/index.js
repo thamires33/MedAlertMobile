@@ -11,6 +11,7 @@ require('./config/passport')(passport);
 // Importações dos controladores
 const alarmeController = require('./controllers/AlarmeController.js');
 const loginController = require('./controllers/LoginController.js');
+const usuarioController = require('./controllers/UsuarioController.js');
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -23,6 +24,7 @@ app.get('/', (req, res) => res.send('API MedAlert está funcionando!'));
 // Proteger rotas com JWT
 app.use('/alarme', passport.authenticate('jwt', { session: false }), alarmeController);
 app.use('/login', loginController);
+app.use('/cadastro', usuarioController);
 // Middleware de tratamento de erros
 app.use((err, req, res, next) => {
     console.error(err.stack);
