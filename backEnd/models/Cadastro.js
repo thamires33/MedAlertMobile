@@ -1,0 +1,28 @@
+const db = require('./db');
+
+const Cadastro = db.sequelize.define('usuario', {
+    id_usuario: {
+        type: db.Sequelize.INTEGER,
+        autoIncrement: true,
+        allowNull: false,
+        primaryKey: true
+    },
+    email: {
+        type: db.Sequelize.STRING,
+        allowNull: false,
+        unique: true,
+        validate: {
+            isEmail: true
+        }
+    },
+    senha: {
+        type: db.Sequelize.STRING,
+        allowNull: false
+    }
+}, { freezeTableName: true });
+
+//Cadastro.sync({force: true});
+
+
+module.exports = Cadastro;
+
