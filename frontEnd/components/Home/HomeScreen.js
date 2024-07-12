@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 import styles from "./styles";
+import { apiEndpoint } from "../../config/Constants";
 
 const HomeScreen = () => {
     const navigation = useNavigation();
@@ -17,7 +18,7 @@ const HomeScreen = () => {
                 throw new Error('Token não encontrado');
             }
 
-            const response = await axios.get('http://localhost:8081/alarme', {
+            const response = await axios.get(`${apiEndpoint}/alarme`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

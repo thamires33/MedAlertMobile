@@ -3,6 +3,7 @@ import { View, Text, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, A
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import css from './styles';
+import { apiEndpoint } from '../../config/Constants';
 
 const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
@@ -38,7 +39,7 @@ const LoginScreen = ({ navigation }) => {
     //#region Validação do login
     const handleLogin = async () => {
         try {
-            const response = await fetch('http://localhost:8081/login', {
+            const response = await fetch(`${apiEndpoint}/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

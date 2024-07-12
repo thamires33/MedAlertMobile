@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     header: {
+        position: 'absolute',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -84,6 +85,7 @@ const styles = StyleSheet.create({
         color: '#FFF',
         fontSize: 16,
     },
+  
     buttonContainer: {
         position: 'absolute',
         bottom: 20,

@@ -3,6 +3,7 @@ import { View, Text, ScrollView, TouchableOpacity, Image, TextInput, Button, Swi
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import styles from "./styles";
+import { apiEndpoint } from '../../config/Constants';
 
 const AlarmScreen = () => {
   const [medicamento, setMedicamento] = useState('');
@@ -21,8 +22,7 @@ const AlarmScreen = () => {
       unidade,
       frequencia,
     };
-    //fetch('http://localhost:8081/alarme', {
-      fetch('http://192.168.3.227:8081/alarme', {
+    fetch(`${apiEndpoint}/alarme`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, Animated, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import css from './styles';
+import { apiEndpoint } from '../../config/Constants';
 
 const CadastroScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
@@ -28,7 +29,7 @@ const CadastroScreen = ({ navigation }) => {
         }
 
         try {
-            const response = await fetch('http://localhost:8081/cadastro', {
+            const response = await fetch(`${apiEndpoint}/cadastro`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
