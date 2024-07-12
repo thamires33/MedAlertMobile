@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, SafeAreaView, Keyboard, FlatList, TouchableOpacity } from "react-native";
+import { View, Text, Image, SafeAreaView, Keyboard, ScrollView, TouchableOpacity } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -73,12 +73,11 @@ const HomeScreen = () => {
                     </TouchableOpacity>
                 </View>
 
-                <FlatList
-                    keyExtractor={(item, index) => index.toString()}
-                    data={alarmes}
-                    renderItem={({ item }) => <Listagem data={item} />}
-                    contentContainerStyle={styles.flatListContentContainer}
-                />
+                <ScrollView contentContainerStyle={styles.scrollViewContentContainer}>
+                    {alarmes.map((item, index) => (
+                        <Listagem key={index.toString()} data={item} />
+                    ))}
+                </ScrollView>
 
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity

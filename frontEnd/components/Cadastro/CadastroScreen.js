@@ -4,7 +4,6 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import css from './styles';
 
 const CadastroScreen = ({ navigation }) => {
-    const [display, setDisplay] = useState('none');
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const [confirmSenha, setConfirmSenha] = useState('');
@@ -12,26 +11,6 @@ const CadastroScreen = ({ navigation }) => {
     const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const fadeAnim = useState(new Animated.Value(0))[0];
-
-    //#region card de alerta
-    useEffect(() => {
-        if (showAlert) {
-            Animated.timing(fadeAnim, {
-                toValue: 1,
-                duration: 500,
-                useNativeDriver: true,
-            }).start(() => {
-                setTimeout(() => {
-                    Animated.timing(fadeAnim, {
-                        toValue: 0,
-                        duration: 500,
-                        useNativeDriver: true,
-                    }).start(() => setShowAlert(false));
-                }, 3000);
-            });
-        }
-    }, [showAlert, fadeAnim]);
-    //#endregion
 
     const handlePasswordVisibility = () => {
         setIsPasswordVisible(!isPasswordVisible);
@@ -58,10 +37,10 @@ const CadastroScreen = ({ navigation }) => {
             });
     
             const data = await response.json();
-    
+            navigation.navigate('Login')
             if (data.success) {
-                Alert.alert('Sucesso', 'Cadastro realizado com sucesso');
                 navigation.navigate('Login');
+                console.log('cadastrado com sucesso');
             } else {
                 setShowAlert(true);
                 Alert.alert('Erro', data.message);

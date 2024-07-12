@@ -1,20 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, ImageBackground, Animated, Alert } from 'react-native';
-import { CheckBox } from 'react-native-elements';
+import { View, Text, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, Animated, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import css from './styles';
 
-
-
 const LoginScreen = ({ navigation }) => {
-    const [display, setDisplay] = useState('none');
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const fadeAnim = useState(new Animated.Value(0))[0];
-    const [isChecked, setIsChecked] = useState(false);
 
     //#region card de alerta
     useEffect(() => {
@@ -40,7 +35,7 @@ const LoginScreen = ({ navigation }) => {
         setIsPasswordVisible(!isPasswordVisible);
     };
 
-    // Validação do login
+    //#region Validação do login
     const handleLogin = async () => {
         try {
             const response = await fetch('http://localhost:8081/login', {
@@ -54,9 +49,8 @@ const LoginScreen = ({ navigation }) => {
             const data = await response.json();
 
             if (data.success) {
-                // Armazenar o token JWT
-                await AsyncStorage.setItem('token', data.token); // Adicionado await
-                // Navegar para a próxima página
+                //token JWT
+                await AsyncStorage.setItem('token', data.token);
                 navigation.navigate('Home');
                 console.log('Login bem-sucedido');
             } else {
@@ -68,25 +62,8 @@ const LoginScreen = ({ navigation }) => {
             Alert.alert('Erro', 'Erro ao conectar ao servidor');
         }
     };
-
-    const fetchProtectedData = async () => {
-        try {
-            const token = await AsyncStorage.getItem('token');
-            const response = await fetch('http://localhost:8081/rota_protegida', {
-                method: 'GET',
-                headers: {
-                    'Authorization': token,
-                    'Content-Type': 'application/json'
-                }
-            });
-    
-            const data = await response.json();
-            console.log(data);
-        } catch (error) {
-            console.error('Erro ao buscar dados protegidos:', error);
-        }
-    };
-
+    //endregion
+   
     return (
         <KeyboardAvoidingView style={[css.container, css.darkbg]}>
 
@@ -139,11 +116,20 @@ const LoginScreen = ({ navigation }) => {
                     />
                     <Text style={css.googleButtonText}>Conta Google</Text>
                 </TouchableOpacity>
-                
-                <View style={css.checkboxContainer}>
-                    <Text style={css.checkboxText2}> Clicando em entrar, você concorda com nossos
-                    <Text style={css.checkboxText1}> Termos de Serviço </Text> e
-                    <Text style={css.checkboxText1}> Política de Privacidade </Text> </Text>
+
+                <View style={css.miudosContainer2}>
+                    <Text style={css.miudosText4}>
+                        Não possui uma conta?
+                        <TouchableOpacity onPress={() => navigation.navigate('Cadastro')}>
+                            <Text style={css.miudosText3}> Cadastre-se </Text>
+                        </TouchableOpacity>
+                    </Text>
+                </View>
+
+                <View style={css.miudosContainer}>
+                    <Text style={css.miudosText2}> Clicando em entrar, você concorda com nossos
+                        <Text style={css.miudosText1}> Termos de Serviço </Text> e
+                        <Text style={css.miudosText1}> Política de Privacidade </Text> </Text>
                 </View>
 
             </View>

@@ -14,6 +14,11 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         padding: 16,
         backgroundColor: '#f8f8f8',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 10,
     },
     menuIconContainer: {
         padding: 8,
@@ -35,7 +40,8 @@ const styles = StyleSheet.create({
         borderRadius: 16,
     },
     scrollViewContentContainer: {
-        padding: 10,
+        paddingTop: 70,
+        paddingBottom: 80,
     },
     card: {
         backgroundColor: '#FFF',

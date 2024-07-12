@@ -67,20 +67,20 @@ const styles = StyleSheet.create({
     //#endregion
 
     //#region letras miudas
-    checkboxText1: {
+    miudosText1: {
         fontSize: 8,
         color:  '#216caf',
         fontFamily: 'Arial',
         //alignSelf: 'center',
     },
-    checkboxText2: {
+    miudosText2: {
         //marginTop: 15,
         fontSize: 8,
         color: "#707175",
         fontFamily: 'Arial',
         //alignSelf: 'center',
     },
-    checkboxContainer: {
+    miudosContainer: {
         width: 150,
         //flexDirection: 'row',
         alignItems: 'center',
@@ -88,10 +88,27 @@ const styles = StyleSheet.create({
         marginTop: 20,
         //backgroundColor: 'black',
     },
-    checkbox: {
-        padding: 0,
-        margin: 0,
-        //color: '#216caf',
+
+    miudosContainer2: {
+        width: 300,
+        //flexDirection: 'row',
+        alignItems: 'center',
+        alignSelf: 'center',
+        marginTop: 15,
+        //backgroundColor: 'black',
+    },
+    miudosText3: {
+        fontSize: 12,
+        color:  '#216caf',
+        fontFamily: 'Arial',
+        //alignSelf: 'center',
+    },
+    miudosText4: {
+        //marginTop: 15,
+        fontSize: 12,
+        color: "#707175",
+        fontFamily: 'Arial',
+        //alignSelf: 'center',
     },
     //#endregion
 
@@ -136,7 +153,7 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 20,
         width: 200,
-        marginTop: 10,
+        marginTop: 5,
       },
       googleIcon: {
         marginRight: 10,

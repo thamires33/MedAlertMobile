@@ -21,8 +21,8 @@ const AlarmScreen = () => {
       unidade,
       frequencia,
     };
-
-    fetch('http://localhost:8081/alarme', {
+    //fetch('http://localhost:8081/alarme', {
+      fetch('http://192.168.3.227:8081/alarme', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
