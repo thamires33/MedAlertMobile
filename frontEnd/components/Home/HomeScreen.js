@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Image, SafeAreaView, Keyboard, ScrollView, TouchableOpacity } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 import styles from "./styles";
@@ -10,6 +10,7 @@ import { apiEndpoint } from "../../config/Constants";
 const HomeScreen = () => {
     const navigation = useNavigation();
     const [alarmes, setAlarmes] = useState([]);
+    const isFocused = useIsFocused(); // Hook para saber se a tela está focada
 
     const fetchAllAlarmes = async () => {
         try {
@@ -36,8 +37,10 @@ const HomeScreen = () => {
     };
 
     useEffect(() => {
-        fetchAllAlarmes();
-    }, []);
+        if (isFocused) {
+            fetchAllAlarmes(); // Atualiza a lista de alarmes quando a tela está focada
+        }
+    }, [isFocused]);
 
     function Listagem({ data }) {
         return (
