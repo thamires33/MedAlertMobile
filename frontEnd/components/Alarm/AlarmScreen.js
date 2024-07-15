@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image, TextInput, Button, Switch, StyleSheet, Alert} from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Image, TextInput, Button, Switch, StyleSheet, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import styles from "./styles";
 import { apiEndpoint } from '../../config/Constants';
@@ -15,7 +16,10 @@ const AlarmScreen = () => {
 
   const toggleSwitch = () => setIsAlarmEnabled(previousState => !previousState);
 
-  const handleCadastro = () => {
+  const handleCadastro = async () => {
+
+    const token = await AsyncStorage.getItem('token');
+
     const data = {
       medicamento,
       dosagem,
@@ -25,7 +29,8 @@ const AlarmScreen = () => {
     fetch(`${apiEndpoint}/alarme`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(data)
     })
@@ -34,6 +39,7 @@ const AlarmScreen = () => {
         if (data.message === 'Alarme cadastrado com sucesso') {
           Alert.alert('Sucesso', 'Alarme cadastrado com sucesso');
           console.log('Success:', data);
+          navigation.navigate('Home', { update: true });
         } else {
           Alert.alert('Erro', data.message || 'Erro desconhecido');
         }
