@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image, TextInput, Button, Switch, StyleSheet, Alert} from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Image, TextInput, Button, Switch, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import styles from "./styles";
@@ -54,9 +54,12 @@ const AlarmScreen = () => {
           <View style={styles.headerTextContainer}>
             <Text style={styles.headerTextRegular}>MedAlert</Text>
           </View>
-          <TouchableOpacity style={styles.profileIconContainer}>
+          <TouchableOpacity 
+            style={styles.profileIconContainer}
+            onPress={() => navigation.navigate('ProfileScreen')}
+          >
             <Image
-              source={{ uri: 'https://via.placeholder.com/150' }} // Imagem de perfil do usuário
+      //        source={{ uri: 'https://via.placeholder.com/150' }} // Imagem de perfil do usuário
               style={styles.profileIcon}
             />
           </TouchableOpacity>
@@ -103,4 +106,5 @@ const AlarmScreen = () => {
     </View>
   );
 };
+
 export default AlarmScreen;
