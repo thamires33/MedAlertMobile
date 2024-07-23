@@ -91,11 +91,14 @@ const HomeScreen = () => {
                     <View style={styles.headerTextContainer}>
                         <Text style={styles.headerTextRegular}>MedAlert</Text>
                     </View>
-                    <TouchableOpacity style={styles.profileIconContainer}>
+                    <TouchableOpacity style={styles.profileIconContainer}
+                    onPress={() => navigation.navigate('Profile')}>
                         <Image
                             source={{ uri: 'https://via.placeholder.com/150' }}
                             style={styles.profileIcon}
+                            
                         />
+
                     </TouchableOpacity>
                 </View>
 
@@ -108,7 +111,7 @@ const HomeScreen = () => {
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity
                         style={styles.addButton}
-                        onPress={() => navigation.navigate('Alarm')}
+                        onPress={() => navigation.navigate('Alarme')}
                     >
                         <Text style={styles.txtAddButton}>Adicionar Remédio</Text>
                     </TouchableOpacity>
