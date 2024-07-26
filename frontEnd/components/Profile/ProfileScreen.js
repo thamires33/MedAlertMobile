@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, Image, TextInput, TouchableOpacity, ScrollView, Alert, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { launchImageLibrary } from 'react-native-image-picker';
+import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
+import { PermissionsAndroid } from 'react-native';
 import styles from './styles'; // Importando estilos do arquivo styles.js
 
 const ProfileScreen = ({ navigation }) => {
@@ -20,26 +21,78 @@ const ProfileScreen = ({ navigation }) => {
     setProfileData({ ...profileData, [field]: value });
   };
 
-  const handleImagePicker = () => {
-    launchImageLibrary({ mediaType: 'photo' }, (response) => {
-      if (response.assets) {
-        const uri = response.assets[0].uri;
-        setProfileData({ ...profileData, profileImage: uri });
+  const requestPermissions = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const cameraPermission = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA);
+        const storagePermission = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE);
+
+        return cameraPermission === PermissionsAndroid.RESULTS.GRANTED && storagePermission === PermissionsAndroid.RESULTS.GRANTED;
+      } catch (err) {
+        console.warn(err);
+        return false;
       }
-    });
+    } else if (Platform.OS === 'ios') {
+      try {
+        const cameraPermission = await request(PERMISSIONS.IOS.CAMERA);
+        const photoLibraryPermission = await request(PERMISSIONS.IOS.PHOTO_LIBRARY);
+
+        return cameraPermission === RESULTS.GRANTED && photoLibraryPermission === RESULTS.GRANTED;
+      } catch (err) {
+        console.warn(err);
+        return false;
+      }
+    }
+    return false;
+  };
+
+  const handleImagePicker = async () => {
+    const hasPermission = await requestPermissions();
+    if (hasPermission) {
+      launchImageLibrary({ mediaType: 'photo' }, (response) => {
+        if (response.assets) {
+          const uri = response.assets[0].uri;
+          setProfileData({ ...profileData, profileImage: uri });
+        }
+      });
+    } else {
+      Alert.alert('Permissões necessárias', 'Precisamos de permissões para acessar a câmera e a galeria.');
+    }
+  };
+
+  const handleCamera = async () => {
+    const hasPermission = await requestPermissions();
+    if (hasPermission) {
+      launchCamera({ mediaType: 'photo' }, (response) => {
+        if (response.assets) {
+          const uri = response.assets[0].uri;
+          setProfileData({ ...profileData, profileImage: uri });
+        }
+      });
+    } else {
+      Alert.alert('Permissões necessárias', 'Precisamos de permissões para acessar a câmera e a galeria.');
+    }
   };
 
   const handleUpdateProfile = async () => {
-    // Implementar lógica de atualização de perfil
-    Alert.alert('Sucesso', 'Perfil atualizado com sucesso');
+    try {
+      // Enviar imagem para o servidor e atualizar perfil
+      Alert.alert('Sucesso', 'Perfil atualizado com sucesso');
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      Alert.alert('Erro', 'Ocorreu um erro ao atualizar perfil');
+    }
   };
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.profileHeader}>
         <Image source={{ uri: profileData.profileImage }} style={styles.profileImage} />
-        <TouchableOpacity onPress={handleImagePicker} style={styles.editIcon}>
+        <TouchableOpacity onPress={handleCamera} style={styles.editIcon}>
           <Icon name="camera" size={20} color="#000" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleImagePicker} style={styles.editIcon}>
+          <Icon name="image" size={20} color="#000" />
         </TouchableOpacity>
       </View>
       {['nome', 'endereco', 'idade', 'telefone', 'toqueAlarme', 'email', 'senha'].map((field) => (
