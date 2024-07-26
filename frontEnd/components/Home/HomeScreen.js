@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
-import styles from "./styles";
+import styles from "./styles"; // Certifique-se de que o caminho está correto
 import { apiEndpoint } from "../../config/Constants";
 
 const HomeScreen = () => {
@@ -67,7 +67,7 @@ const HomeScreen = () => {
                         <Text style={styles.headerTextRegular}>MedAlert</Text>
                     </View>
                     <TouchableOpacity style={styles.profileIconContainer}
-                    onPress={() => navigation.navigate('ProfileScreen')}>
+                        onPress={() => navigation.navigate('Profile')}>
                         <Image
                             source={{ uri: 'https://via.placeholder.com/150' }}
                             style={styles.profileIcon}

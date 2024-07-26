@@ -1,3 +1,4 @@
+const Sequelize = require('sequelize');
 const db = require('./db');
 
 const Login = db.sequelize.define('usuario', {
@@ -18,11 +19,14 @@ const Login = db.sequelize.define('usuario', {
     senha: {
         type: db.Sequelize.STRING,
         allowNull: false
+    },
+    profileImage: {
+        type: db.Sequelize.STRING, // Tipo de dado para armazenar a URL ou caminho da imagem
+        allowNull: true // Permite valores nulos se a imagem não for fornecida
     }
 }, { freezeTableName: true });
 
-//Login.sync({force: true});
-
+// Synchronize with the database, use { force: true } only if you want to drop and recreate the table
+//Login.sync({ force: true });
 
 module.exports = Login;
-

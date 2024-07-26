@@ -3,8 +3,8 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    padding: 20,
+    padding: 16,
+    backgroundColor: '#f8f8f8',
   },
   profileHeader: {
     alignItems: 'center',
@@ -16,10 +16,16 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   editIcon: {
-    marginTop: 10,
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 5,
+    elevation: 2,
   },
   infoRow: {
-    marginBottom: 20,
+    marginBottom: 15,
   },
   label: {
     fontSize: 16,
@@ -27,20 +33,23 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   input: {
-    borderBottomWidth: 1,
+    height: 40,
     borderColor: '#ccc',
-    paddingVertical: 5,
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    backgroundColor: '#fff',
   },
   updateButton: {
     backgroundColor: '#007bff',
-    padding: 10,
+    padding: 15,
     borderRadius: 5,
     alignItems: 'center',
-    marginTop: 20,
   },
   updateButtonText: {
     color: '#fff',
     fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
