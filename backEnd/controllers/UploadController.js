@@ -9,7 +9,7 @@ const upload = multer({ dest: 'uploads/' });
 
 router.post('/upload', upload.single('image'), async (req, res) => {
   const imageUrl = `http://localhost:8081/uploads/${req.file.filename}`;
-  `;
+  
 
   try {
     await Image.create({
