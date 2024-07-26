@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import css from './styles';
 import { apiEndpoint } from '../../config/Constants';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
@@ -12,7 +13,6 @@ const LoginScreen = ({ navigation }) => {
     const [showAlert, setShowAlert] = useState(false);
     const fadeAnim = useState(new Animated.Value(0))[0];
 
-    //#region card de alerta
     useEffect(() => {
         if (showAlert) {
             Animated.timing(fadeAnim, {
@@ -30,13 +30,11 @@ const LoginScreen = ({ navigation }) => {
             });
         }
     }, [showAlert, fadeAnim]);
-    //#endregion
 
     const handlePasswordVisibility = () => {
         setIsPasswordVisible(!isPasswordVisible);
     };
 
-    //#region Validação do login
     const handleLogin = async () => {
         try {
             const response = await fetch(`${apiEndpoint}/login`, {
@@ -50,7 +48,6 @@ const LoginScreen = ({ navigation }) => {
             const data = await response.json();
 
             if (data.success) {
-                //token JWT
                 await AsyncStorage.setItem('token', data.token);
                 navigation.navigate('Home');
                 console.log('Login bem-sucedido');
@@ -63,11 +60,26 @@ const LoginScreen = ({ navigation }) => {
             Alert.alert('Erro', 'Erro ao conectar ao servidor');
         }
     };
-    //endregion
-   
+
+    const handleGoogleLogin = async () => {
+        try {
+            await GoogleSignin.hasPlayServices();
+            const userInfo = await GoogleSignin.signIn();
+            console.log('User Info:', userInfo);
+
+            // Você pode precisar enviar os dados para o seu servidor
+            // e armazenar o token de autenticação, se necessário.
+
+            await AsyncStorage.setItem('token', userInfo.idToken); // ou outro token relevante
+            navigation.navigate('Home');
+        } catch (error) {
+            console.error('Erro ao fazer login com o Google:', error);
+            Alert.alert('Erro', 'Erro ao conectar ao servidor');
+        }
+    };
+
     return (
         <KeyboardAvoidingView style={[css.container, css.darkbg]}>
-
             <View style={css.logo_login}>
                 <Image
                     source={require('../../assets/Login/logo.png')}
@@ -83,7 +95,6 @@ const LoginScreen = ({ navigation }) => {
             )}
 
             <View style={css.login__form}>
-
                 <TextInput style={css.login__input} placeholder='Usuário:'
                     onChangeText={(text) => setEmail(text)} />
 
@@ -110,7 +121,7 @@ const LoginScreen = ({ navigation }) => {
                     <View style={css.divider} />
                 </View>
 
-                <TouchableOpacity style={css.googleButton} onPress={handleLogin}>
+                <TouchableOpacity style={css.googleButton} onPress={handleGoogleLogin}>
                     <Image
                         source={require('../../assets/Login/google.png')}
                         style={css.googleIcon}
@@ -132,10 +143,9 @@ const LoginScreen = ({ navigation }) => {
                         <Text style={css.miudosText1}> Termos de Serviço </Text> e
                         <Text style={css.miudosText1}> Política de Privacidade </Text> </Text>
                 </View>
-
             </View>
         </KeyboardAvoidingView>
     );
 };
 
-export default LoginScreen; 
+export default LoginScreen;
