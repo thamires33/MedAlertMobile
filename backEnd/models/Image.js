@@ -1,6 +1,7 @@
-const { sequelize, Sequelize } = require('./db'); 
+const Sequelize = require('sequelize');
+const db = require('../config/database');
 
-const Image = sequelize.define('Image', {
+const Image = db.define('image', {
   filename: {
     type: Sequelize.STRING,
     allowNull: false
@@ -8,7 +9,11 @@ const Image = sequelize.define('Image', {
   url: {
     type: Sequelize.STRING,
     allowNull: false
+  },
+  id_usuario: {
+    type: Sequelize.INTEGER,
+    allowNull: false
   }
 });
-Image.sync({force:true});
+
 module.exports = Image;

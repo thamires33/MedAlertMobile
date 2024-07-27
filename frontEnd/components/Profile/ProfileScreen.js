@@ -4,18 +4,18 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { launchImageLibrary } from 'react-native-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import styles from './styles'; // Importando estilos do arquivo styles.js
+import styles from './styles'; 
 
 const ProfileScreen = ({ navigation }) => {
   const [profileData, setProfileData] = useState({
-    nome: 'Carol Silva Antunes',
-    endereco: 'Rua Colômbia, 201',
-    idade: '24 anos',
-    telefone: '+55 11 98765-4321',
-    toqueAlarme: 'Stargaze',
-    email: 'carol_silva@outlook.com',
-    senha: '********',
-    profileImage: 'https://example.com/path/to/profile-pic.jpg',
+    nome: '',
+    endereco: '',
+    idade: '',
+    telefone: '',
+    toqueAlarme: '',
+    email: '',
+    senha: '',
+    profileImage: '',
   });
 
   const handleEditProfile = (field, value) => {
@@ -24,7 +24,7 @@ const ProfileScreen = ({ navigation }) => {
 
   const handleImagePicker = () => {
     launchImageLibrary({ mediaType: 'photo' }, (response) => {
-      if (response.assets) {
+      if (response.assets && response.assets.length > 0) {
         const uri = response.assets[0].uri;
         setProfileData({ ...profileData, profileImage: uri });
       }
@@ -33,6 +33,7 @@ const ProfileScreen = ({ navigation }) => {
 
   const handleUpdateProfile = async () => {
     const formData = new FormData();
+
     formData.append('nome', profileData.nome);
     formData.append('endereco', profileData.endereco);
     formData.append('idade', profileData.idade);
@@ -40,33 +41,38 @@ const ProfileScreen = ({ navigation }) => {
     formData.append('toqueAlarme', profileData.toqueAlarme);
     formData.append('email', profileData.email);
     formData.append('senha', profileData.senha);
-    
-    // Adicione o arquivo de imagem
+
     if (profileData.profileImage) {
       formData.append('profileImage', {
         uri: profileData.profileImage,
-        type: 'image/jpeg', // ou o tipo de arquivo correto
-        name: 'profileImage.jpg' // ou o nome correto
+        type: 'image/jpeg',
+        name: 'profileImage.jpg',
       });
     }
-  
+
     try {
+      const token = await AsyncStorage.getItem('userToken');
       const response = await fetch('http://localhost:8081/updateProfile', {
         method: 'POST',
         headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}` // Inclua o token se necessário
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data', // Certifique-se de que o backend aceita esse tipo de conteúdo
         },
-        body: formData
+        body: formData,
       });
-  
+
+      if (!response.ok) {
+        throw new Error('Erro na atualização do perfil');
+      }
+
       const result = await response.json();
       console.log('Perfil atualizado:', result);
+      Alert.alert('Sucesso', 'Perfil atualizado com sucesso');
     } catch (error) {
       console.error('Erro ao atualizar perfil:', error);
+      Alert.alert('Erro', 'Erro ao atualizar perfil');
     }
   };
-  
 
   return (
     <ScrollView style={styles.container}>

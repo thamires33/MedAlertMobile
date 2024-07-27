@@ -1,11 +1,10 @@
 {
   "name": "medalertfront",
   "version": "1.0.0",
-  "main": "expo/AppEntry.js",
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "start": "expo start --dev-client",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web"
   },
   "dependencies": {
@@ -19,9 +18,10 @@
     "expo-font": "^12.0.7",
     "expo-status-bar": "~1.12.1",
     "feather-icons": "^4.29.2",
+    "prebuild": "^13.0.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-native": "0.74.1",
+    "react-native": "0.74.3",
     "react-native-elements": "^3.4.3",
     "react-native-image-picker": "^7.1.2",
     "react-native-safe-area-context": "4.10.1",

@@ -14,12 +14,12 @@ require('./config/passport')(passport);
 const alarmeController = require('./controllers/AlarmeController');
 const loginController = require('./controllers/LoginController');
 const usuarioController = require('./controllers/UsuarioController');
-const profileController = require('./controllers/ProfileController');
+const { updateProfile } = require('./controllers/ProfileController'); // Certifique-se de que o caminho está correto
 
 // Configuração de armazenamento com Multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // Defina o diretório onde os arquivos serão armazenados
+    cb(null, 'uploads/'); // Diretório onde os arquivos serão armazenados
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname)); // Nome do arquivo com timestamp
@@ -42,7 +42,7 @@ app.use('/login', loginController);
 app.use('/cadastro', usuarioController);
 
 // Rota para atualizar perfil
-app.post('/updateProfile', upload.single('profileImage'), profileController);
+app.post('/updateProfile', passport.authenticate('jwt', { session: false }), upload.single('profileImage'), updateProfile);
 
 // Middleware de tratamento de erros
 app.use((err, req, res, next) => {
