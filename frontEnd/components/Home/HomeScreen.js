@@ -1,16 +1,15 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { View, Text, Image, SafeAreaView, Keyboard, ScrollView, TouchableOpacity, BackHandler, Alert } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, Image, SafeAreaView, Keyboard, ScrollView, TouchableOpacity } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useNavigation, useIsFocused, useFocusEffect } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
-import styles from "./styles";
+import styles from "./styles"; // Certifique-se de que o caminho está correto
 import { apiEndpoint } from "../../config/Constants";
 
 const HomeScreen = () => {
     const navigation = useNavigation();
     const [alarmes, setAlarmes] = useState([]);
-    const isFocused = useIsFocused();
 
     const fetchAllAlarmes = async () => {
         try {
@@ -37,32 +36,8 @@ const HomeScreen = () => {
     };
 
     useEffect(() => {
-        if (isFocused) {
-            fetchAllAlarmes();
-        }
-    }, [isFocused]);
-
-    useFocusEffect(
-        useCallback(() => { // Função para impedir retorno para a tela Login
-            const onBackPress = () => {
-                Alert.alert(
-                    "Sair",
-                    "Você tem certeza que quer sair do aplicativo?",
-                    [
-                        { text: "Cancelar", style: "cancel" },
-                        { text: "OK", onPress: () => BackHandler.exitApp() }
-                    ]
-                );
-                return true; 
-            };
-
-            BackHandler.addEventListener('hardwareBackPress', onBackPress);
-
-            return () => {
-                BackHandler.removeEventListener('hardwareBackPress', onBackPress);
-            };
-        }, [])
-    );
+        fetchAllAlarmes();
+    }, []);
 
     function Listagem({ data }) {
         return (
@@ -91,7 +66,8 @@ const HomeScreen = () => {
                     <View style={styles.headerTextContainer}>
                         <Text style={styles.headerTextRegular}>MedAlert</Text>
                     </View>
-                    <TouchableOpacity style={styles.profileIconContainer}>
+                    <TouchableOpacity style={styles.profileIconContainer}
+                        onPress={() => navigation.navigate('Profile')}>
                         <Image
                             source={{ uri: 'https://via.placeholder.com/150' }}
                             style={styles.profileIcon}

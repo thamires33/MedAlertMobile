@@ -12,6 +12,7 @@ require('./config/passport')(passport);
 const alarmeController = require('./controllers/AlarmeController.js');
 const loginController = require('./controllers/LoginController.js');
 const usuarioController = require('./controllers/UsuarioController.js');
+const imageController = require('./controllers/ImageController.js');
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -25,6 +26,7 @@ app.get('/', (req, res) => res.send('API MedAlert está funcionando!'));
 app.use('/alarme', passport.authenticate('jwt', { session: false }), alarmeController);
 app.use('/login', loginController);
 app.use('/cadastro', usuarioController);
+app.use('/upload', imageController);
 // Middleware de tratamento de erros
 app.use((err, req, res, next) => {
     console.error(err.stack);
