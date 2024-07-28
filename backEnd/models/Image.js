@@ -37,4 +37,4 @@ const Image = sequelize.define('Image', {
   }
 });
 //Image.sync({force: true});
-module.exports = { Image };
+module.exports = Image ;
