@@ -21,6 +21,7 @@
     "mysql2": "^3.10.1",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
+    "react-native-push-notification": "^8.1.1",
     "sequelize": "^6.37.3",
     "supertest": "^7.0.0"
   }
