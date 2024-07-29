@@ -9,13 +9,7 @@ const Alarme = db.sequelize.define('alarme',{
         allowNull: false,
         primaryKey: true
     },
-    //fk_usuario:{
-        //type:db.Sequelize.INTEGER,
-        //allowNull:false,
-        //references:{
-            //model: Login,key: 'id_usuario'
-        //}
-    //},
+
     medicamento:{
         type:db.Sequelize.STRING,
 

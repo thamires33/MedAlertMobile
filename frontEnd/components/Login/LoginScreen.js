@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, Animated, Alert } from 'react-native';
+import { View, Text, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, Animated, Alert, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as LocalAuthentication from 'expo-local-authentication';
 import css from './styles';
 import { apiEndpoint } from '../../config/Constants';
 
@@ -12,7 +13,7 @@ const LoginScreen = ({ navigation }) => {
     const [showAlert, setShowAlert] = useState(false);
     const fadeAnim = useState(new Animated.Value(0))[0];
 
-    //#region card de alerta
+    // Configura a animação do alerta
     useEffect(() => {
         if (showAlert) {
             Animated.timing(fadeAnim, {
@@ -30,13 +31,12 @@ const LoginScreen = ({ navigation }) => {
             });
         }
     }, [showAlert, fadeAnim]);
-    //#endregion
 
     const handlePasswordVisibility = () => {
         setIsPasswordVisible(!isPasswordVisible);
     };
 
-    //#region Validação do login
+    // Realiza o login com email e senha
     const handleLogin = async () => {
         try {
             const response = await fetch(`${apiEndpoint}/login`, {
@@ -50,7 +50,7 @@ const LoginScreen = ({ navigation }) => {
             const data = await response.json();
 
             if (data.success) {
-                //token JWT
+                // Salva o token JWT no AsyncStorage
                 await AsyncStorage.setItem('token', data.token);
                 navigation.navigate('Home');
                 console.log('Login bem-sucedido');
@@ -63,11 +63,36 @@ const LoginScreen = ({ navigation }) => {
             Alert.alert('Erro', 'Erro ao conectar ao servidor');
         }
     };
-    //endregion
-   
-    return (
-        <KeyboardAvoidingView style={[css.container, css.darkbg]}>
 
+    // Realiza o login com autenticação biométrica
+    const handleBiometricLogin = async () => {
+        const hasHardware = await LocalAuthentication.hasHardwareAsync();
+        if (!hasHardware) {
+            Alert.alert('Erro', 'O dispositivo não suporta autenticação biométrica.');
+            return;
+        }
+
+        const isEnrolled = await LocalAuthentication.isEnrolledAsync();
+        if (!isEnrolled) {
+            Alert.alert('Erro', 'Nenhum método de autenticação biométrica está registrado.');
+            return;
+        }
+
+        const result = await LocalAuthentication.authenticateAsync({
+            promptMessage: 'Autentique-se',
+            fallbackLabel: 'Usar senha',
+        });
+
+        if (result.success) {
+            // Se a autenticação biométrica for bem-sucedida, navega para a tela principal
+            navigation.navigate('Home');
+        } else {
+            Alert.alert('Falha', 'Autenticação falhou. Tente novamente.');
+        }
+    };
+
+    return (
+        <KeyboardAvoidingView style={[css.container, css.darkbg]} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
             <View style={css.logo_login}>
                 <Image
                     source={require('../../assets/Login/logo.png')}
@@ -84,12 +109,19 @@ const LoginScreen = ({ navigation }) => {
 
             <View style={css.login__form}>
 
-                <TextInput style={css.login__input} placeholder='Usuário:'
-                    onChangeText={(text) => setEmail(text)} />
+                <TextInput
+                    style={css.login__input}
+                    placeholder='Usuário:'
+                    onChangeText={setEmail}
+                />
 
                 <View style={css.passwordContainer}>
-                    <TextInput style={css.login__input} placeholder='Senha:' secureTextEntry={!isPasswordVisible}
-                        onChangeText={(text) => setSenha(text)} />
+                    <TextInput
+                        style={css.login__input}
+                        placeholder='Senha:'
+                        secureTextEntry={!isPasswordVisible}
+                        onChangeText={setSenha}
+                    />
 
                     <TouchableOpacity onPress={handlePasswordVisibility} style={css.icon}>
                         <Icon
@@ -102,6 +134,10 @@ const LoginScreen = ({ navigation }) => {
 
                 <TouchableOpacity style={css.login__button} onPress={handleLogin}>
                     <Text style={css.login__buttonText}>Entrar</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={css.login__buttonB} onPress={handleBiometricLogin}>
+                    <Text style={css.login__buttonText}>Entrar com Biometria</Text>
                 </TouchableOpacity>
 
                 <View style={css.dividerContainer}>
@@ -138,4 +174,4 @@ const LoginScreen = ({ navigation }) => {
     );
 };
 
-export default LoginScreen; 
+export default LoginScreen;
