@@ -16,8 +16,13 @@ router.get('/', async (req, res) => {
 // Cadastra Alarme (POST)
 router.post('/', async (req, res) => {
     try {
+<<<<<<< HEAD:backEnd/controllers/alarmesController.js
         const { fk_usuario, nome_medicamento, posologia, intervalo_doses } = req.body;
         const newAlarme = await Alarme.create({ fk_usuario, nome_medicamento, posologia, intervalo_doses });
+=======
+        const { medicamento, dosagem, frequencia, unidade } = req.body;
+        const newAlarme = await Alarme.create({ medicamento, dosagem, frequencia, unidade });
+>>>>>>> calendario:backEnd/controllers/AlarmeController.js
         res.status(201).json({ message: 'Alarme cadastrado com sucesso', newAlarme });
     } catch (error) {
         console.error('Erro ao cadastrar alarme:', error);

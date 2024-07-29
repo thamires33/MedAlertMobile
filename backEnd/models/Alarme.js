@@ -1,6 +1,7 @@
 'use strict';
 const { Model } = require('sequelize');
 
+<<<<<<< HEAD
 module.exports = (sequelize, DataTypes) => {
   class Alarme extends Model {
     /**
@@ -10,6 +11,30 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+=======
+
+const Alarme = db.sequelize.define('alarme',{
+    id_alarme: {
+        type: db.Sequelize.INTEGER,
+        autoIncrement: true,
+        allowNull: false,
+        primaryKey: true
+    },
+
+    medicamento:{
+        type:db.Sequelize.STRING,
+
+    },
+    dosagem:{
+        type:db.Sequelize.STRING,
+    },
+    frequencia:{
+        type:db.Sequelize.STRING,
+    },
+    unidade:{
+        type:db.Sequelize.STRING,
+
+>>>>>>> calendario
     }
   }
   Alarme.init({
