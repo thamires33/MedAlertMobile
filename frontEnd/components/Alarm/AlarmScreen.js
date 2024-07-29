@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image, TextInput, Button, Switch, Alert, Platform } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Image, TextInput, Button, Switch, Alert } from 'react-native';
 import * as Calendar from 'expo-calendar';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useNavigation } from '@react-navigation/native';
@@ -20,9 +20,12 @@ const AlarmScreen = () => {
 
   useEffect(() => {
     (async () => {
-      const { status } = await Calendar.requestCalendarPermissionsAsync();
+      const { status } = await Calendar.getCalendarPermissionsAsync();
       if (status !== 'granted') {
-        Alert.alert('Permissão Negada', 'Permissões do calendário são necessárias.');
+        const { status: newStatus } = await Calendar.requestCalendarPermissionsAsync();
+        if (newStatus !== 'granted') {
+          Alert.alert('Permissão Negada', 'Permissões do calendário são necessárias.');
+        }
       }
     })();
   }, []);
@@ -31,73 +34,77 @@ const AlarmScreen = () => {
 
   const handleDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
-    const type=event.type; 
-    if (type=="set"){
+    if (event.type === "set") {
       setDate(currentDate);
     }    
     setShowDatePicker(false);
   };
 
   const handleCadastro = async () => {
-    const token = await AsyncStorage.getItem('token');
+    try {
+      const token = await AsyncStorage.getItem('token');
 
-    const data = {
-      medicamento,
-      dosagem,
-      unidade,
-      frequencia,
-    };
+      if (!token) {
+        Alert.alert('Erro', 'Token de autenticação não encontrado.');
+        return;
+      }
 
-    fetch(`${apiEndpoint}/alarme`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(data)
-    })
-      .then(response => response.json())
-      .then(async data => {
-        if (data.message === 'Alarme cadastrado com sucesso') {
-          Alert.alert('Sucesso', 'Alarme cadastrado com sucesso');
-          console.log('Success:', data);
+      const data = {
+        medicamento,
+        dosagem,
+        unidade,
+        frequencia,
+      };
 
-          //Adicionar evento ao calendário
-          try {
-            const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);
-            console.log(calendars);
-            const defaultCalendar = calendars.find(calendar => calendar.source.name === 'Default');
-            if (defaultCalendar) {
-              const eventDetails = {
-                title: medicamento,
-                startDate: date.toISOString(),
-                endDate: new Date(date.getTime() + 60 * 60 * 1000).toISOString(),
-                timeZone: 'GMT',
-                notes: dosagem,unidade,frequencia, 
-                recurrenceRule: {
-                  frequency: Calendar.Frequency.HOURLY,
-                  interval: parseInt(frequencia),
-                },
-              };
-              await Calendar.createEventAsync(defaultCalendar.id, eventDetails);
-              Alert.alert('Evento Criado', 'O evento foi adicionado ao calendário.');
-            } else {
-              Alert.alert('Erro', 'Calendário padrão não foi encontrado.');
-            }
-          } catch (error) {
-            console.error('Erro ao criar evento:', error);
-            Alert.alert('Erro', 'Erro ao criar evento no calendário.');
-          }
-
-          navigation.navigate('Home', { update: true });
-        } else {
-          Alert.alert('Erro', data.message || 'Erro desconhecido');
-        }
-      })
-      .catch((error) => {
-        console.error('Erro:', error);
-        Alert.alert('Erro', 'Erro ao conectar ao servidor');
+      const response = await fetch(`${apiEndpoint}/alarme`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(data)
       });
+
+      const result = await response.json();
+
+      if (result.message === 'Alarme cadastrado com sucesso') {
+        Alert.alert('Sucesso', 'Alarme cadastrado com sucesso');
+
+        // Adicionar evento ao calendário
+        try {
+          const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);
+          const defaultCalendar = calendars.find(calendar => calendar.source.name === 'Default') || calendars[0];
+
+          if (defaultCalendar) {
+            const eventDetails = {
+              title: medicamento,
+              startDate: date,
+              endDate: new Date(date.getTime() + 60 * 60 * 1000),
+              timeZone: Calendar.DEFAULT,
+              notes: `${dosagem} ${unidade} - Frequência: ${frequencia} horas`,
+              recurrenceRule: {
+                frequency: Calendar.Frequency.HOURLY,
+                interval: parseInt(frequencia),
+              },
+            };
+            await Calendar.createEventAsync(defaultCalendar.id, eventDetails);
+            Alert.alert('Evento Criado', 'O evento foi adicionado ao calendário.');
+          } else {
+            Alert.alert('Erro', 'Calendário padrão não foi encontrado.');
+          }
+        } catch (error) {
+          console.error('Erro ao criar evento:', error);
+          Alert.alert('Erro', 'Erro ao criar evento no calendário. Verifique as permissões e tente novamente.');
+        }
+
+        navigation.navigate('Home', { update: true });
+      } else {
+        Alert.alert('Erro', result.message || 'Erro desconhecido');
+      }
+    } catch (error) {
+      console.error('Erro:', error);
+      Alert.alert('Erro', 'Erro ao conectar ao servidor');
+    }
   };
 
   return (
