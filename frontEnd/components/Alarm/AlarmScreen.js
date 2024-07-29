@@ -64,7 +64,7 @@ const AlarmScreen = () => {
 
           //Adicionar evento ao calendário
           try {
-            //const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);
+            const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);
             console.log(calendars);
             const defaultCalendar = calendars.find(calendar => calendar.source.name === 'Default');
             if (defaultCalendar) {
@@ -73,6 +73,7 @@ const AlarmScreen = () => {
                 startDate: date.toISOString(),
                 endDate: new Date(date.getTime() + 60 * 60 * 1000).toISOString(),
                 timeZone: 'GMT',
+                notes: dosagem,unidade,frequencia, 
                 recurrenceRule: {
                   frequency: Calendar.Frequency.HOURLY,
                   interval: parseInt(frequencia),
