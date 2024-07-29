@@ -68,6 +68,15 @@ const AlarmScreen = () => {
           </TouchableOpacity>
         </View>
 
+        <View style={styles.container}>
+      
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate('Home')}
+      >
+        <Text style={styles.buttonText}>⬅️ Voltar</Text> {/* Usando emoji para o ícone */}
+      </TouchableOpacity>
+    </View>
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Cadastrar Remédios</Text>
           <View style={styles.separator} />
