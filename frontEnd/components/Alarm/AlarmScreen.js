@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image, TextInput, Button, Switch, StyleSheet, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, Image, TextInput, Button, Switch, Alert } from 'react-native';
+import * as Calendar from 'expo-calendar';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -11,43 +13,98 @@ const AlarmScreen = () => {
   const [dosagem, setDosagem] = useState('');
   const [unidade, setUnidade] = useState('');
   const [frequencia, setFrequencia] = useState('');
+  const [date, setDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const navigation = useNavigation();
   const [isAlarmEnabled, setIsAlarmEnabled] = useState(false);
 
+  useEffect(() => {
+    (async () => {
+      const { status } = await Calendar.getCalendarPermissionsAsync();
+      if (status !== 'granted') {
+        const { status: newStatus } = await Calendar.requestCalendarPermissionsAsync();
+        if (newStatus !== 'granted') {
+          Alert.alert('Permissão Negada', 'Permissões do calendário são necessárias.');
+        }
+      }
+    })();
+  }, []);
+
   const toggleSwitch = () => setIsAlarmEnabled(previousState => !previousState);
 
+  const handleDateChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    if (event.type === "set") {
+      setDate(currentDate);
+    }    
+    setShowDatePicker(false);
+  };
+
   const handleCadastro = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
 
-    const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        Alert.alert('Erro', 'Token de autenticação não encontrado.');
+        return;
+      }
 
-    const data = {
-      medicamento,
-      dosagem,
-      unidade,
-      frequencia,
-    };
-    fetch(`${apiEndpoint}/alarme`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(data)
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data.message === 'Alarme cadastrado com sucesso') {
-          Alert.alert('Sucesso', 'Alarme cadastrado com sucesso');
-          console.log('Success:', data);
-          navigation.navigate('Home', { update: true });
-        } else {
-          Alert.alert('Erro', data.message || 'Erro desconhecido');
-        }
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-        Alert.alert('Erro', 'Erro ao conectar ao servidor');
+      const data = {
+        medicamento,
+        dosagem,
+        unidade,
+        frequencia,
+      };
+
+      const response = await fetch(`${apiEndpoint}/alarme`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(data)
       });
+
+      const result = await response.json();
+
+      if (result.message === 'Alarme cadastrado com sucesso') {
+        Alert.alert('Sucesso', 'Alarme cadastrado com sucesso');
+
+        // Adicionar evento ao calendário
+        try {
+          const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);
+          const defaultCalendar = calendars.find(calendar => calendar.source.name === 'Default') || calendars[0];
+
+          if (defaultCalendar) {
+            const eventDetails = {
+              title: medicamento,
+              startDate: date,
+              endDate: new Date(date.getTime() + 60 * 60 * 1000),
+              timeZone: Calendar.DEFAULT,
+              notes: `${dosagem} ${unidade} - Frequência: ${frequencia} horas`,
+              recurrenceRule: {
+                frequency: Calendar.Frequency.HOURLY,
+                interval: parseInt(frequencia),
+              },
+            };
+            await Calendar.createEventAsync(defaultCalendar.id, eventDetails);
+            Alert.alert('Evento Criado', 'O evento foi adicionado ao calendário.');
+          } else {
+            Alert.alert('Erro', 'Calendário padrão não foi encontrado.');
+          }
+        } catch (error) {
+          console.error('Erro ao criar evento:', error);
+          Alert.alert('Erro', 'Erro ao criar evento no calendário. Verifique as permissões e tente novamente.');
+        }
+
+        navigation.navigate('Home', { update: true });
+      } else {
+        Alert.alert('Erro', result.message || 'Erro desconhecido');
+      }
+    } catch (error) {
+      console.error('Erro:', error);
+      Alert.alert('Erro', 'Erro ao conectar ao servidor');
+    }
   };
 
   return (
@@ -68,15 +125,6 @@ const AlarmScreen = () => {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.container}>
-      
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate('Home')}
-      >
-        <Text style={styles.buttonText}>⬅️ Voltar</Text> {/* Usando emoji para o ícone */}
-      </TouchableOpacity>
-    </View>
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Cadastrar Remédios</Text>
           <View style={styles.separator} />
@@ -95,13 +143,23 @@ const AlarmScreen = () => {
             </View>
           </View>
 
-          <Text style={styles.label}>Frequência</Text>
-          <TextInput style={styles.input} placeholder="Frequência" value={frequencia} onChangeText={setFrequencia} />
+          <Text style={styles.label}>Frequência (em horas)</Text>
+          <TextInput style={styles.input} placeholder="Frequência" keyboardType="numeric" value={frequencia} onChangeText={setFrequencia} />
 
           <View style={styles.row}>
             <View style={styles.halfContainer}>
-              <Text style={styles.label}>Horário</Text>
-              <TextInput style={styles.input} placeholder="Horário" />
+              <Text style={styles.label}>Data e Hora</Text>
+              <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+                <Text style={styles.input}>{date.toLocaleString()}</Text>
+              </TouchableOpacity>
+              {showDatePicker && (
+                <DateTimePicker
+                  value={date}
+                  mode="date"
+                  display="default"
+                  onChange={handleDateChange}
+                />
+              )}
             </View>
             <View style={styles.halfContainer}>
               <Text style={styles.label}>Alarme</Text>
@@ -118,4 +176,5 @@ const AlarmScreen = () => {
     </View>
   );
 };
+
 export default AlarmScreen;
