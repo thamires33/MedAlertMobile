@@ -67,6 +67,7 @@ const AlarmScreen = () => {
             />
           </TouchableOpacity>
         </View>
+        <Button title="Cadastrar" onPress={handleCadastro} />
 
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Cadastrar Remédios</Text>

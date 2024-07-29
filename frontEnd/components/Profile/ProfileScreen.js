@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { Button, Image, View, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import {apiEndpoint} from '../../config/Constants'; // Importa a constante
+import { apiEndpoint } from '../../config/Constants';
 
-export default function ImagePickerExample() {
+export default function ImagePicker() {
   const [image, setImage] = useState(null);
 
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
-      alert('Precisamos da permissão para acessar sua galeria!');
+      Alert.alert('Permissão necessária', 'Precisamos da permissão para acessar sua galeria!');
       return;
     }
 
@@ -27,30 +27,40 @@ export default function ImagePickerExample() {
 
   const uploadImage = async () => {
     if (image) {
-      let filename = image.split('/').pop();
-      let match = /\.(\w+)$/.exec(filename);
-      let type = match ? `image/${match[1]}` : `image`;
+      const filename = image.split('/').pop();
+      const match = /\.(\w+)$/.exec(filename);
+      const type = match ? `image/${match[1]}` : `image`;
 
-      let formData = new FormData();
-      formData.append('photo', { uri: image, name: filename, type });
-      formData.append('usuario_id', 'usuario_id');
-
-      await fetch(`${apiEndpoint}/upload`, { // Usa a constante para o URL
-        method: 'POST',
-        body: formData,
-        headers: {
-          'content-type': 'multipart/form-data',
-        },
-      })
-      .then(response => response.json())
-      .then(data => {
-        Alert.alert('Sucesso', 'Upload bem-sucedido!');
-        console.log(data);
-      })
-      .catch(error => {
-        Alert.alert('Erro', 'Erro ao fazer upload da imagem.');
-        console.error(error);
+      const formData = new FormData();
+      formData.append('image', {
+        uri: image,
+        name: filename,
+        type: type,
       });
+      formData.append('usuario_id', '1'); // Substitua com o ID real do usuário
+
+      try {
+        const response = await fetch(`${apiEndpoint}/upload`, {
+          method: 'POST',
+          body: formData,
+      //    headers: {
+      //      'Content-Type': 'multipart/form-data',
+      //    },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          Alert.alert('Sucesso', 'Upload bem-sucedido!');
+          console.log(data);
+        } else {
+          throw new Error('Erro ao fazer upload da imagem.');
+        }
+      } catch (error) {
+        Alert.alert('Erro', error.message);
+        console.error(error);
+      }
+    } else {
+      Alert.alert('Nenhuma Imagem Selecionada', 'Por favor, selecione uma imagem para fazer o upload.');
     }
   };
 
