@@ -71,8 +71,17 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
+
+    cardImage: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+    },
+
     cardIcon: {
-        marginLeft: 'auto',
+       // marginLeft: 'auto',
+        fontSize: 20,
+        color: '#007BFF',
     },
     takeButton: {
         backgroundColor: 'blue',

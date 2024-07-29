@@ -27,7 +27,9 @@
     "react-native-vector-icons": "^10.1.0",
     "react-native-web": "~0.19.6",
     "expo-calendar": "~13.0.5",
-    "@react-native-community/datetimepicker": "8.0.1"
+    "@react-native-community/datetimepicker": "8.0.1",
+    "expo-camera": "~15.0.14",
+    "expo-image-picker": "~15.0.7"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

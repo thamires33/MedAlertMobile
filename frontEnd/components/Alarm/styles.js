@@ -70,5 +70,26 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: 8,
   },
+
+  cameraButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 10,
+    padding: 10,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 5,
+  },
+  cameraButtonText: {
+    marginLeft: 10,
+    fontSize: 16,
+  },
+  takenPhoto: {
+    width: 100,
+    height: 100,
+    marginVertical: 10,
+    borderRadius: 5,
+  },
+  
 });
 export default styles;

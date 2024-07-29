@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image, TextInput, Button, Switch, Alert, Platform } from 'react-native';
-import * as Calendar from 'expo-calendar';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import React, { useState } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, Image, TextInput, Button, Switch, StyleSheet, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import * as ImagePicker from 'expo-image-picker'; // Camera
 import styles from "./styles";
 import { apiEndpoint } from '../../config/Constants';
 
@@ -13,41 +12,22 @@ const AlarmScreen = () => {
   const [dosagem, setDosagem] = useState('');
   const [unidade, setUnidade] = useState('');
   const [frequencia, setFrequencia] = useState('');
-  const [date, setDate] = useState(new Date());
-  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [image, setImage] = useState(null); // Camera
   const navigation = useNavigation();
   const [isAlarmEnabled, setIsAlarmEnabled] = useState(false);
 
-  useEffect(() => {
-    (async () => {
-      const { status } = await Calendar.requestCalendarPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert('Permissão Negada', 'Permissões do calendário são necessárias.');
-      }
-    })();
-  }, []);
-
   const toggleSwitch = () => setIsAlarmEnabled(previousState => !previousState);
-
-  const handleDateChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    const type=event.type; 
-    if (type=="set"){
-      setDate(currentDate);
-    }    
-    setShowDatePicker(false);
-  };
 
   const handleCadastro = async () => {
     const token = await AsyncStorage.getItem('token');
-
     const data = {
       medicamento,
       dosagem,
       unidade,
       frequencia,
+      imageUri: image // Camera
     };
-
+    console.log(data);
     fetch(`${apiEndpoint}/alarme`, {
       method: 'POST',
       headers: {
@@ -56,49 +36,38 @@ const AlarmScreen = () => {
       },
       body: JSON.stringify(data)
     })
-      .then(response => response.json())
-      .then(async data => {
-        if (data.message === 'Alarme cadastrado com sucesso') {
-          Alert.alert('Sucesso', 'Alarme cadastrado com sucesso');
-          console.log('Success:', data);
-
-          //Adicionar evento ao calendário
-          try {
-            //const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);
-            console.log(calendars);
-            const defaultCalendar = calendars.find(calendar => calendar.source.name === 'Default');
-            if (defaultCalendar) {
-              const eventDetails = {
-                title: medicamento,
-                startDate: date.toISOString(),
-                endDate: new Date(date.getTime() + 60 * 60 * 1000).toISOString(),
-                timeZone: 'GMT',
-                recurrenceRule: {
-                  frequency: Calendar.Frequency.HOURLY,
-                  interval: parseInt(frequencia),
-                },
-              };
-              await Calendar.createEventAsync(defaultCalendar.id, eventDetails);
-              Alert.alert('Evento Criado', 'O evento foi adicionado ao calendário.');
-            } else {
-              Alert.alert('Erro', 'Calendário padrão não foi encontrado.');
-            }
-          } catch (error) {
-            console.error('Erro ao criar evento:', error);
-            Alert.alert('Erro', 'Erro ao criar evento no calendário.');
-          }
-
-          navigation.navigate('Home', { update: true });
-        } else {
-          Alert.alert('Erro', data.message || 'Erro desconhecido');
-        }
-      })
-      .catch((error) => {
-        console.error('Erro:', error);
-        Alert.alert('Erro', 'Erro ao conectar ao servidor');
-      });
+    .then(response => response.json())
+    .then(data => {
+      if (data.message === 'Alarme cadastrado com sucesso') {
+        Alert.alert('Sucesso', 'Alarme cadastrado com sucesso');
+        console.log('Success:', data);
+        navigation.navigate('Home', { update: true });
+      } else {
+        Alert.alert('Erro', data.message || 'Erro desconhecido');
+      }
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      Alert.alert('Erro', 'Erro ao conectar ao servidor');
+    });
   };
-
+//#region camera
+  const openCamera = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permissão necessária', 'Precisamos de permissão para acessar a câmera.');
+      return;
+    }
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
+//#endregion
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView}>
@@ -135,23 +104,13 @@ const AlarmScreen = () => {
             </View>
           </View>
 
-          <Text style={styles.label}>Frequência (em horas)</Text>
-          <TextInput style={styles.input} placeholder="Frequência" keyboardType="numeric" value={frequencia} onChangeText={setFrequencia} />
+          <Text style={styles.label}>Frequência</Text>
+          <TextInput style={styles.input} placeholder="Frequência" value={frequencia} onChangeText={setFrequencia} />
 
           <View style={styles.row}>
             <View style={styles.halfContainer}>
-              <Text style={styles.label}>Data e Hora</Text>
-              <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-                <Text style={styles.input}>{date.toLocaleString()}</Text>
-              </TouchableOpacity>
-              {showDatePicker && (
-                <DateTimePicker
-                  value={date}
-                  mode="date"
-                  display="default"
-                  onChange={handleDateChange}
-                />
-              )}
+              <Text style={styles.label}>Horário</Text>
+              <TextInput style={styles.input} placeholder="Horário" />
             </View>
             <View style={styles.halfContainer}>
               <Text style={styles.label}>Alarme</Text>
@@ -161,6 +120,12 @@ const AlarmScreen = () => {
               />
             </View>
           </View>
+
+          <TouchableOpacity onPress={openCamera} style={styles.cameraButton}> 
+            <Icon name="camera-alt" size={24} color="#000" />
+            <Text style={styles.cameraButtonText}>Tirar Foto</Text>
+          </TouchableOpacity>
+          {image && <Image source={{ uri: image }} style={styles.takenPhoto} />}
 
           <Button title="Cadastrar" onPress={handleCadastro} />
         </View>
