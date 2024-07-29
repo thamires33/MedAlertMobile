@@ -20,12 +20,9 @@ const AlarmScreen = () => {
 
   useEffect(() => {
     (async () => {
-      const { status } = await Calendar.getCalendarPermissionsAsync();
+      const { status } = await Calendar.requestCalendarPermissionsAsync();
       if (status !== 'granted') {
-        const { status: newStatus } = await Calendar.requestCalendarPermissionsAsync();
-        if (newStatus !== 'granted') {
-          Alert.alert('Permissão Negada', 'Permissões do calendário são necessárias.');
-        }
+        Alert.alert('Permissão Negada', 'Permissões do calendário são necessárias.');
       }
     })();
   }, []);
