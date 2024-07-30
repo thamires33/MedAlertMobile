@@ -10,7 +10,6 @@
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
-    
     },
     "android": {
       "adaptiveIcon": {
@@ -34,6 +33,7 @@
     },
     "plugins": [
       "expo-build-properties"
-    ]
+    ],
+    "scheme": "medalertfront"
   }
 }
