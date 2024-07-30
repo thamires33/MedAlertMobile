@@ -48,6 +48,10 @@ const LoginScreen = ({ navigation }) => {
             Alert.alert('Error', 'Something went wrong during login');
         }
     };
+
+    const callAuthGoogle = () => {
+        promptAsync();
+    };
     //#endregion
 
     //#region card de alerta
