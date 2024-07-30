@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, Animated, Alert, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import * as Google from 'expo-auth-session/providers/google'; // OAuth
+import * as Google from 'expo-auth-session/providers/google';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as WebBrowser from 'expo-web-browser'; // OAuth
+import * as WebBrowser from 'expo-web-browser';
 import * as LocalAuthentication from 'expo-local-authentication';
 import css from './styles';
 import { apiEndpoint } from '../../config/Constants';
 
-WebBrowser.maybeCompleteAuthSession(); // OAuth
+WebBrowser.maybeCompleteAuthSession();
 
 const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
@@ -18,30 +18,25 @@ const LoginScreen = ({ navigation }) => {
     const fadeAnim = useState(new Animated.Value(0))[0];
 
     //#region OAuth
-    const [request, response, promptAsync] = Google.useAuthRequest({
-        expoClientId: '869491331341-ikr79v21hqeg2bjkv7a6c46cfo2doe1v.apps.googleusercontent.com',
-        iosClientId: '869491331341-ikr79v21hqeg2bjkv7a6c46cfo2doe1v.apps.googleusercontent.com',
-        androidClientId: '869491331341-ddmrcksm97vb14lg5nqnaua90emkqdrg.apps.googleusercontent.com',
-        webClientId: '869491331341-ikr79v21hqeg2bjkv7a6c46cfo2doe1v.apps.googleusercontent.com',
+    const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
+        clientId: Platform.select({
+            android: '959565514464-oup9n162rjeb2ci4pm5p6u897e8pjhna.apps.googleusercontent.com',
+        }),
     });
-
-    const callAuthGoogle = () => {
-        promptAsync();
-    };
 
     useEffect(() => {
         if (response?.type === 'success') {
-            const { authentication } = response;
-            handleGoogleSignIn(authentication);
+            const { id_token } = response.params;
+            handleGoogleSignIn(id_token);
         }
     }, [response]);
 
-    const handleGoogleSignIn = async (authentication) => {
+    const handleGoogleSignIn = async (idToken) => {
         try {
             const userInfoResponse = await fetch(
                 'https://www.googleapis.com/oauth2/v3/userinfo',
                 {
-                    headers: { Authorization: `Bearer ${authentication.accessToken}` },
+                    headers: { Authorization: `Bearer ${idToken}` },
                 }
             );
 
@@ -93,7 +88,6 @@ const LoginScreen = ({ navigation }) => {
             const data = await response.json();
 
             if (data.success) {
-                // Token salvo aqui, repassar onde precisa
                 await AsyncStorage.setItem('token', data.token);
                 navigation.navigate('Home');
                 console.log('Login bem-sucedido');

@@ -10,19 +10,30 @@
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
-    },
-    "ios": {
-      "supportsTablet": true
+    
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.MedAlertFront"
+      "package": "com.anonymous.medalertfront",
+      "config": {
+        "googleSignIn": {
+          "certificateHash": "2E:FB:CD:3E:06:2B:D0:83:59:AE:CD:84:A1:0F:AF:15:3E:42:0D:B8"
+        }
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "b5a6ae6e-5def-43a4-8963-9a5ad90af023"
+      }
+    },
+    "plugins": [
+      "expo-build-properties"
+    ]
   }
 }
