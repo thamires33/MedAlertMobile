@@ -21,10 +21,15 @@ app.use(passport.initialize());
 
 app.get('/', (req, res) => res.send('API MedAlert está funcionando!'));
 
-// Proteger rotas com JWT
+// Usar a estratégia Clerk para uma rota
+app.use('/clerk-alarme', passport.authenticate('clerk', { session: false }), alarmeController);
+
+// Usar a estratégia JWT tradicional para outra rota
 app.use('/alarme', passport.authenticate('jwt', { session: false }), alarmeController);
+
 app.use('/login', loginController);
 app.use('/cadastro', usuarioController);
+
 // Middleware de tratamento de erros
 app.use((err, req, res, next) => {
     console.error(err.stack);
