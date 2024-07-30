@@ -5,6 +5,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import * as ImagePicker from 'expo-image-picker'; // Camera
 import styles from "./styles";
 import { apiEndpoint } from '../../config/Constants';
 
@@ -14,6 +15,7 @@ const AlarmScreen = () => {
   const [unidade, setUnidade] = useState('');
   const [frequencia, setFrequencia] = useState('');
   const [date, setDate] = useState(new Date());
+  const [image, setImage] = useState(null); // Camera
   const [showDatePicker, setShowDatePicker] = useState(false);
   const navigation = useNavigation();
   const [isAlarmEnabled, setIsAlarmEnabled] = useState(false);
@@ -33,7 +35,7 @@ const AlarmScreen = () => {
     const currentDate = selectedDate || date;
     if (event.type === "set") {
       setDate(currentDate);
-    }    
+    }
     setShowDatePicker(false);
   };
 
@@ -51,6 +53,7 @@ const AlarmScreen = () => {
         dosagem,
         unidade,
         frequencia,
+        imageUri: image // Camera
       };
 
       const response = await fetch(`${apiEndpoint}/alarme`, {
@@ -63,11 +66,10 @@ const AlarmScreen = () => {
       });
 
       const result = await response.json();
-
+      //#region Evento Calendario
       if (result.message === 'Alarme cadastrado com sucesso') {
         Alert.alert('Sucesso', 'Alarme cadastrado com sucesso');
 
-        // Adicionar evento ao calendário
         try {
           const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);
           const defaultCalendar = calendars.find(calendar => calendar.source.name === 'Default') || calendars[0];
@@ -103,6 +105,25 @@ const AlarmScreen = () => {
       Alert.alert('Erro', 'Erro ao conectar ao servidor');
     }
   };
+  //#endregion
+
+  //#region camera
+  const openCamera = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permissão necessária', 'Precisamos de permissão para acessar a câmera.');
+      return;
+    }
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
+  //#endregion
 
   return (
     <View style={styles.container}>
@@ -166,6 +187,12 @@ const AlarmScreen = () => {
               />
             </View>
           </View>
+
+          <TouchableOpacity onPress={openCamera} style={styles.cameraButton}>
+            <Icon name="camera-alt" size={24} color="#000" />
+            <Text style={styles.cameraButtonText}>Tirar Foto</Text>
+          </TouchableOpacity>
+          {image && <Image source={{ uri: image }} style={styles.takenPhoto} />}
 
           <Button title="Cadastrar" onPress={handleCadastro} />
         </View>

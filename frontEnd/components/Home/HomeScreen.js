@@ -70,7 +70,10 @@ const HomeScreen = () => {
                 <View style={styles.titleLine}>
                     <Text style={styles.cardTitle}>{data.medicamento} {data.dosagem}mg</Text>
                     <TouchableOpacity>
-                        <Icon name='edit' style={styles.cardIcon}>Editar</Icon>
+                        <Image
+                            source={{ uri: data.imageUri }} // Renderização da imagem
+                            style={styles.cardImage}
+                        />
                     </TouchableOpacity>
                 </View>
                 <Text style={styles.cardSubtitle}>Frequência: A cada {data.frequencia} horas</Text>

@@ -74,6 +74,19 @@ const styles = StyleSheet.create({
     cardIcon: {
         marginLeft: 'auto',
     },
+
+    cardIcon: {
+        // marginLeft: 'auto',
+         fontSize: 20,
+         color: '#007BFF',
+     },
+
+     cardImage: {
+        width: 100,
+        height: 100,
+        borderRadius: 20,
+    },
+
     takeButton: {
         backgroundColor: 'blue',
         padding: 10,

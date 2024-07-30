@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, Animated, Alert, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import * as Google from 'expo-auth-session/providers/google'; // OAuth
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as WebBrowser from 'expo-web-browser'; // OAuth
 import * as LocalAuthentication from 'expo-local-authentication';
 import css from './styles';
 import { apiEndpoint } from '../../config/Constants';
+
+WebBrowser.maybeCompleteAuthSession(); // OAuth
 
 const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
@@ -13,7 +17,45 @@ const LoginScreen = ({ navigation }) => {
     const [showAlert, setShowAlert] = useState(false);
     const fadeAnim = useState(new Animated.Value(0))[0];
 
-    // Configura a animação do alerta
+    //#region OAuth
+    const [request, response, promptAsync] = Google.useAuthRequest({
+        expoClientId: '869491331341-ikr79v21hqeg2bjkv7a6c46cfo2doe1v.apps.googleusercontent.com',
+        iosClientId: '869491331341-ikr79v21hqeg2bjkv7a6c46cfo2doe1v.apps.googleusercontent.com',
+        androidClientId: '869491331341-ddmrcksm97vb14lg5nqnaua90emkqdrg.apps.googleusercontent.com',
+        webClientId: '869491331341-ikr79v21hqeg2bjkv7a6c46cfo2doe1v.apps.googleusercontent.com',
+    });
+
+    const callAuthGoogle = () => {
+        promptAsync();
+    };
+
+    useEffect(() => {
+        if (response?.type === 'success') {
+            const { authentication } = response;
+            handleGoogleSignIn(authentication);
+        }
+    }, [response]);
+
+    const handleGoogleSignIn = async (authentication) => {
+        try {
+            const userInfoResponse = await fetch(
+                'https://www.googleapis.com/oauth2/v3/userinfo',
+                {
+                    headers: { Authorization: `Bearer ${authentication.accessToken}` },
+                }
+            );
+
+            const userInfo = await userInfoResponse.json();
+            await AsyncStorage.setItem('@user', JSON.stringify(userInfo));
+            Alert.alert('Login Successful', `Welcome ${userInfo.name}`);
+            navigation.navigate('Home');
+        } catch (error) {
+            Alert.alert('Error', 'Something went wrong during login');
+        }
+    };
+    //#endregion
+
+    //#region card de alerta
     useEffect(() => {
         if (showAlert) {
             Animated.timing(fadeAnim, {
@@ -35,8 +77,9 @@ const LoginScreen = ({ navigation }) => {
     const handlePasswordVisibility = () => {
         setIsPasswordVisible(!isPasswordVisible);
     };
+    //#endregion
 
-    // Realiza o login com email e senha
+    //#region Validação do login
     const handleLogin = async () => {
         try {
             const response = await fetch(`${apiEndpoint}/login`, {
@@ -50,7 +93,7 @@ const LoginScreen = ({ navigation }) => {
             const data = await response.json();
 
             if (data.success) {
-                // Salva o token JWT no AsyncStorage
+                // Token salvo aqui, repassar onde precisa
                 await AsyncStorage.setItem('token', data.token);
                 navigation.navigate('Home');
                 console.log('Login bem-sucedido');
@@ -63,8 +106,9 @@ const LoginScreen = ({ navigation }) => {
             Alert.alert('Erro', 'Erro ao conectar ao servidor');
         }
     };
+    //#endregion
 
-    // Realiza o login com autenticação biométrica
+    //#region autenticação biométrica
     const handleBiometricLogin = async () => {
         const hasHardware = await LocalAuthentication.hasHardwareAsync();
         if (!hasHardware) {
@@ -84,12 +128,12 @@ const LoginScreen = ({ navigation }) => {
         });
 
         if (result.success) {
-            // Se a autenticação biométrica for bem-sucedida, navega para a tela principal
             navigation.navigate('Home');
         } else {
             Alert.alert('Falha', 'Autenticação falhou. Tente novamente.');
         }
     };
+    //#endregion
 
     return (
         <KeyboardAvoidingView style={[css.container, css.darkbg]} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -146,7 +190,7 @@ const LoginScreen = ({ navigation }) => {
                     <View style={css.divider} />
                 </View>
 
-                <TouchableOpacity style={css.googleButton} onPress={handleLogin}>
+                <TouchableOpacity style={css.googleButton} onPress={callAuthGoogle}>
                     <Image
                         source={require('../../assets/Login/google.png')}
                         style={css.googleIcon}
