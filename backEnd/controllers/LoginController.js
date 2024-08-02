@@ -21,9 +21,6 @@ router.post('/', async (req, res) => {
             return res.status(401).json({ success: false, message: 'Credenciais inválidas' });
         }
 
-        //const salt=await bcrypt.genSalt(10);
-        //console.log(await bcrypt.hash(senha, salt));
-
         const isMatch = await bcrypt.compare(senha, usuario.senha);
 
         if (isMatch) {

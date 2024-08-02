@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, Animated, Alert, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import * as Google from 'expo-auth-session/providers/google';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as WebBrowser from 'expo-web-browser';
 import * as LocalAuthentication from 'expo-local-authentication';
 import css from './styles';
 import { apiEndpoint } from '../../config/Constants';
+
+WebBrowser.maybeCompleteAuthSession();
 
 const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
@@ -13,7 +17,44 @@ const LoginScreen = ({ navigation }) => {
     const [showAlert, setShowAlert] = useState(false);
     const fadeAnim = useState(new Animated.Value(0))[0];
 
-    // Configura a animação do alerta
+    //#region OAuth
+    const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
+        clientId: Platform.select({
+            android: '959565514464-oup9n162rjeb2ci4pm5p6u897e8pjhna.apps.googleusercontent.com',
+        }),
+    });
+
+    useEffect(() => {
+        if (response?.type === 'success') {
+            const { id_token } = response.params;
+            handleGoogleSignIn(id_token);
+        }
+    }, [response]);
+
+    const handleGoogleSignIn = async (idToken) => {
+        try {
+            const userInfoResponse = await fetch(
+                'https://www.googleapis.com/oauth2/v3/userinfo',
+                {
+                    headers: { Authorization: `Bearer ${idToken}` },
+                }
+            );
+
+            const userInfo = await userInfoResponse.json();
+            await AsyncStorage.setItem('@user', JSON.stringify(userInfo));
+            Alert.alert('Login Successful', `Welcome ${userInfo.name}`);
+            navigation.navigate('Home');
+        } catch (error) {
+            Alert.alert('Error', 'Something went wrong during login');
+        }
+    };
+
+    const callAuthGoogle = () => {
+        promptAsync();
+    };
+    //#endregion
+
+    //#region card de alerta
     useEffect(() => {
         if (showAlert) {
             Animated.timing(fadeAnim, {
@@ -35,8 +76,9 @@ const LoginScreen = ({ navigation }) => {
     const handlePasswordVisibility = () => {
         setIsPasswordVisible(!isPasswordVisible);
     };
+    //#endregion
 
-    // Realiza o login com email e senha
+    //#region Validação do login
     const handleLogin = async () => {
         try {
             const response = await fetch(`${apiEndpoint}/login`, {
@@ -50,7 +92,6 @@ const LoginScreen = ({ navigation }) => {
             const data = await response.json();
 
             if (data.success) {
-                // Salva o token JWT no AsyncStorage
                 await AsyncStorage.setItem('token', data.token);
                 navigation.navigate('Home');
                 console.log('Login bem-sucedido');
@@ -63,8 +104,9 @@ const LoginScreen = ({ navigation }) => {
             Alert.alert('Erro', 'Erro ao conectar ao servidor');
         }
     };
+    //#endregion
 
-    // Realiza o login com autenticação biométrica
+    //#region autenticação biométrica
     const handleBiometricLogin = async () => {
         const hasHardware = await LocalAuthentication.hasHardwareAsync();
         if (!hasHardware) {
@@ -84,12 +126,12 @@ const LoginScreen = ({ navigation }) => {
         });
 
         if (result.success) {
-            // Se a autenticação biométrica for bem-sucedida, navega para a tela principal
             navigation.navigate('Home');
         } else {
             Alert.alert('Falha', 'Autenticação falhou. Tente novamente.');
         }
     };
+    //#endregion
 
     return (
         <KeyboardAvoidingView style={[css.container, css.darkbg]} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -146,7 +188,7 @@ const LoginScreen = ({ navigation }) => {
                     <View style={css.divider} />
                 </View>
 
-                <TouchableOpacity style={css.googleButton} onPress={handleLogin}>
+                <TouchableOpacity style={css.googleButton} onPress={callAuthGoogle}>
                     <Image
                         source={require('../../assets/Login/google.png')}
                         style={css.googleIcon}
