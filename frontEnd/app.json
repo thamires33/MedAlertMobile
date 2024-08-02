@@ -28,12 +28,6 @@
     },
     "extra": {
       "eas": {
-<<<<<<< HEAD
-        "projectId": "46020f78-9945-436d-9563-550a231ed1ca"
-      }
-    },
-    "owner": "http.thami"
-=======
         "projectId": "b5a6ae6e-5def-43a4-8963-9a5ad90af023"
       },
       "googleClientId": "959565514464-oup9n162rjeb2ci4pm5p6u897e8pjhna.apps.googleusercontent.com"
@@ -42,6 +36,5 @@
       "expo-build-properties"
     ],
     "scheme": "medalertfront"
->>>>>>> eac811770ec19b65db0717fcb807b15b3093c4a2
   }
 }
