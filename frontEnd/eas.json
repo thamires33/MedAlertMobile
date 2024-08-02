@@ -5,14 +5,7 @@
   "build": {
     "development": {
       "developmentClient": true,
-<<<<<<< HEAD
-      "distribution": "internal"
-    },
-    "preview": {
-      "distribution": "internal"
-    },
-    "production": {}
-=======
+
       "distribution": "internal",
       "env": {
       
@@ -35,7 +28,7 @@
         "ANDROID_CERTIFICATE_HASH": "2E:FB:CD:3E:06:2B:D0:83:59:AE:CD:84:A1:0F:AF:15:3E:42:0D:B8"
       }
     }
->>>>>>> eac811770ec19b65db0717fcb807b15b3093c4a2
+
   },
   "submit": {
     "production": {}
