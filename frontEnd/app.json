@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "MedAlertFront",
-    "slug": "MedAlertFront",
+    "slug": "medalertmobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -23,6 +23,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "46020f78-9945-436d-9563-550a231ed1ca"
+      }
+    },
+    "owner": "http.thami"
   }
 }
