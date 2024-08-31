@@ -1,34 +1,31 @@
-const db = require(`./db`);
+const db = require('./db');
 const Login = require('./Login');
 
-
-const Alarme = db.sequelize.define('alarme',{
+const Alarme = db.sequelize.define('alarme', {
     id_alarme: {
         type: db.Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
-    fk_usuario:{
-        type:db.Sequelize.INTEGER,
-        allowNull:false,
-        references:{
-            model: Login,key: 'id_usuario'
-        }
+    medicamento: {
+        type: db.Sequelize.STRING,
     },
-    nome_medicamento:{
-        type:db.Sequelize.STRING,
-
+    dosagem: {
+        type: db.Sequelize.STRING,
     },
-    posologia:{
-        type:db.Sequelize.INTEGER,
+    frequencia: {
+        type: db.Sequelize.STRING,
     },
-    intervalo_doses:{
-        type:db.Sequelize.INTEGER
+    unidade: {
+        type: db.Sequelize.STRING,
+    },
+    imageUri: { 
+        type: db.Sequelize.TEXT,
     }
-},{
-    freezeTableName:true
+}, {
+    freezeTableName: true
 });
 
 //Alarme.sync({force:true});
-module.exports=Alarme;
+module.exports = Alarme;

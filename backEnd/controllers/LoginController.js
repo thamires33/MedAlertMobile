@@ -1,20 +1,46 @@
 const express = require('express');
 const router = express.Router();
-const Usuario = require('../models/Login');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const keys = require('../config/keys'); 
+const Usuario = require('../models/Login'); 
 
 router.post('/', async (req, res) => {
-    const { email } = req.body;
-    const { senha } = req.body;
+    const { email, senha } = req.body;
 
     if (!email || !senha) {
         return res.status(400).json({ error: 'Por favor, forneça email e senha' });
     }
 
     try {
-        const usuario = await Usuario.findOne({ where: { email, senha } });
+        console.log(`Tentando login para email: ${email}`);
 
-        if (usuario) {
-            return res.status(200).json({ success: true, message: 'Login bem-sucedido' });
+        const usuario = await Usuario.findOne({ where: { email } });
+
+        if (!usuario) {
+            return res.status(401).json({ success: false, message: 'Credenciais inválidas' });
+        }
+
+        const isMatch = await bcrypt.compare(senha, usuario.senha);
+
+        if (isMatch) {
+            const payload = {
+                id: usuario.id_usuario,
+                email: usuario.email
+            };
+            console.log(payload);
+            jwt.sign(
+                payload,
+                keys.secretOrKey,
+                { expiresIn: 3600 },
+                (err, token) => {
+                    if (err) throw err;
+                    res.json({
+                        success: true,
+                        token
+                    });
+                }
+            );
         } else {
             return res.status(401).json({ success: false, message: 'Credenciais inválidas' });
         }

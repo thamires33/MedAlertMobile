@@ -1,12 +1,12 @@
 import { StyleSheet } from 'react-native';
+
 const styles = StyleSheet.create({
 
     container: {
         flex: 1,
-        justifyContent: 'top',
+        justifyContent: 'flex-start',
         alignItems: 'center',
-        backgroundColor: '#FFFFFF'
-
+        backgroundColor: '#FFFFFF',
     },
     //#region cabeçalho logo
     logo_login: {
@@ -56,7 +56,17 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         borderRadius: 20,
         padding: 10,
+        width: 200,
+        marginBottom: 10,
+    },
+    login__buttonB:{
+        padding: 16,
+        backgroundColor: "#216caf",
+        alignSelf: "center",
+        borderRadius: 20,
+        padding: 10,
         width: 200
+        
     },
     login__buttonText: {
         fontSize: 18,
@@ -67,31 +77,38 @@ const styles = StyleSheet.create({
     //#endregion
 
     //#region letras miudas
-    checkboxText1: {
+    miudosText1: {
         fontSize: 8,
         color:  '#216caf',
         fontFamily: 'Arial',
-        //alignSelf: 'center',
     },
-    checkboxText2: {
-        //marginTop: 15,
+    miudosText2: {
         fontSize: 8,
         color: "#707175",
         fontFamily: 'Arial',
-        //alignSelf: 'center',
     },
-    checkboxContainer: {
+    miudosContainer: {
         width: 150,
-        //flexDirection: 'row',
         alignItems: 'center',
         alignSelf: 'center',
         marginTop: 20,
-        //backgroundColor: 'black',
     },
-    checkbox: {
-        padding: 0,
-        margin: 0,
-        //color: '#216caf',
+
+    miudosContainer2: {
+        width: 300,
+        alignItems: 'center',
+        alignSelf: 'center',
+        marginTop: 15,
+    },
+    miudosText3: {
+        fontSize: 12,
+        color:  '#216caf',
+        fontFamily: 'Arial',
+    },
+    miudosText4: {
+        fontSize: 12,
+        color: "#707175",
+        fontFamily: 'Arial',
     },
     //#endregion
 
@@ -117,36 +134,42 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginVertical: 20,
-      },
-      divider: {
+    },
+    divider: {
         flex: 1,
         height: 1,
         backgroundColor: '#ccc',
-      },
-      dividerText: {
+    },
+    dividerText: {
         marginHorizontal: 10,
         fontSize: 14,
         color: '#888',
-      },
+    },
     googleButton: {
         flexDirection: 'row',
-      //  alignItems: 'center',
-        alignSelf:'center',
-        backgroundColor: '#E2695F',
-        padding: 10,
-        borderRadius: 20,
+        alignSelf: 'center',
+        backgroundColor: '#ffffff',
+        padding: 12,
+        borderRadius: 25,
         width: 200,
-        marginTop: 10,
-      },
-      googleIcon: {
-        marginRight: 10,
+        marginTop: 20, // Aumenta o espaçamento entre os botões
+        elevation: 4, // Adiciona uma sombra
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+    },
+    googleIcon: {
+        marginRight: 12,
         width: 20,
         height: 20,
-      },
-      googleButtonText: {
-        color: '#fff',
+    },
+    googleButtonText: {
+        color: '#333',
         fontSize: 16,
-      },
-      //#endregion
+        fontWeight: 'bold',
+    },
+    //#endregion
 });
-export default styles; 
+
+export default styles;

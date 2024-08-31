@@ -9,52 +9,52 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     header: {
-        justifyContent: "space-between",
-        flexDirection: "row",
-        alignItems: "center",
-        padding: 20,
-    },
-    headerIcon: {
-        height: 20,
-        width: 20,
-    },
-    textTitle: {
-        fontWeight: 'bold',
-        fontSize: 20,
-    },
-    containerday: {
-        justifyContent: "flex-start",
-        alignItems: 'center',
-        backgroundColor: '#f0f0f0',
-        paddingTop: 20,
-    },
-    blockContainer: {
+        position: 'absolute',
         flexDirection: 'row',
-        justifyContent: "space-between",
-        width: '100%',
-        paddingHorizontal: 20,
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: 16,
+        backgroundColor: '#f8f8f8',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 10,
     },
-    coloredBlock: {
-        width: 39,
-        height: 34,
-        backgroundColor: 'blue',
-        justifyContent: "center",
-        alignItems: "center",
-        borderRadius: 10,
+    menuIconContainer: {
+        padding: 8,
     },
-    blockText: {
-        color: 'white',
-        fontSize: 12,
+    headerTextContainer: {
+        flex: 1,
+        alignItems: 'center',
+    },
+    headerTextRegular: {
+        fontSize: 20,
         fontWeight: 'bold',
+    },
+    profileIconContainer: {
+        padding: 8,
+    },
+    profileIcon: {
+        width: 32,
+        height: 32,
+        borderRadius: 16,
+    },
+    scrollViewContentContainer: {
+        paddingTop: 70,
+        paddingBottom: 80,
     },
     card: {
-        backgroundColor: '#f0f0f0',
+        backgroundColor: '#FFF',
         padding: 15,
-        borderRadius: 10,
         marginVertical: 10,
         marginHorizontal: 20,
-        borderWidth: 1, // Adicionando a borda
-        borderColor: '#cccccc', // Cor da borda
+        borderRadius: 10,
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 8,
+        elevation: 1,
     },
     cardTitle: {
         fontSize: 18,
@@ -62,28 +62,43 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     cardSubtitle: {
-        fontSize: 14,
-        marginBottom: 10,
+        fontSize: 16,
+        color: '#666',
+        marginVertical: 5,
     },
-    titleLine:{
-       
-        flexDirection:'row',
-        justifyContent:'space-between'
+    titleLine: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
     },
-    cardIcon:{
-        marginLeft:'auto',
+    cardIcon: {
+        marginLeft: 'auto',
     },
+
+    cardIcon: {
+        // marginLeft: 'auto',
+         fontSize: 20,
+         color: '#007BFF',
+     },
+
+     cardImage: {
+        width: 100,
+        height: 100,
+        borderRadius: 20,
+    },
+
     takeButton: {
         backgroundColor: 'blue',
-        borderRadius: 10,
+        padding: 10,
+        borderRadius: 5,
         alignItems: 'center',
-        paddingVertical: 5,
+        marginTop: 10,
     },
     takeButtonText: {
-        color: 'white',
-        fontSize: 14,
-        fontWeight: 'bold',
+        color: '#FFF',
+        fontSize: 16,
     },
+  
     buttonContainer: {
         position: 'absolute',
         bottom: 20,
@@ -92,16 +107,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     addButton: {
-        alignItems: "center",
-        width: 358,
-        height: 41,
-        backgroundColor: 'blue',
-        borderRadius: 15,
-        justifyContent: "center",
+        backgroundColor: '#007BFF',
+        padding: 10,
+        borderRadius: 20,
+        width: 200,
+        alignItems: 'center',
     },
     txtAddButton: {
-        color: 'white',
-        fontFamily: "inter",
+        color: '#FFF',
+        fontSize: 16,
     },
 });
 
