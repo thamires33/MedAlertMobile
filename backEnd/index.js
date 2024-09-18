@@ -1,6 +1,6 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 const passport = require('passport');
 const app = express();
 const port = 8081;
@@ -32,7 +32,6 @@ const runMigrations = async () => {
 
 // Função para iniciar o servidor
 const startServer = () => {
-  // Configurações do Express
   app.use(bodyParser.json());
   app.use(cors());
   app.use(passport.initialize());
