@@ -25,6 +25,15 @@
 
 <br>
 
+## Para aplicar as migrações
+
+
+```
+\> npx run index migrate
+```
+
+<br>
+
 ## Instruções iniciais
 
 - Crie um arquivo chamado [.env](/.env), pois ele contém informações que serão importadas nas configurações, é de extrema importância que o arquivo seja criado. O arquivo criado deve conter as seguintes informações:
