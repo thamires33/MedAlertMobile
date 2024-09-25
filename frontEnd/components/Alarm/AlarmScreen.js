@@ -1,7 +1,12 @@
+<<<<<<< HEAD
 import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image, TextInput, Button, Switch, Alert } from 'react-native';
 import * as Calendar from 'expo-calendar';
 import DateTimePicker from '@react-native-community/datetimepicker';
+=======
+import React, { useState } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, Image, TextInput, Button, Switch, Alert } from 'react-native';
+>>>>>>> 0b8fd46f02b0c189c4c7d6e80eff601c0ee3bd0a
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -135,9 +140,12 @@ const AlarmScreen = () => {
           <View style={styles.headerTextContainer}>
             <Text style={styles.headerTextRegular}>MedAlert</Text>
           </View>
-          <TouchableOpacity style={styles.profileIconContainer}>
+          <TouchableOpacity 
+            style={styles.profileIconContainer}
+            onPress={() => navigation.navigate('ProfileScreen')}
+          >
             <Image
-              source={{ uri: 'https://via.placeholder.com/150' }} // Imagem de perfil do usuário
+      //        source={{ uri: 'https://via.placeholder.com/150' }} // Imagem de perfil do usuário
               style={styles.profileIcon}
             />
           </TouchableOpacity>

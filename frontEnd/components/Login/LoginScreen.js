@@ -79,7 +79,6 @@ const LoginScreen = ({ navigation }) => {
     };
     //#endregion
 
-    //#region Validação do login
     const handleLogin = async () => {
         try {
             const response = await fetch(`${apiEndpoint}/login`, {
@@ -212,7 +211,6 @@ const LoginScreen = ({ navigation }) => {
                         <Text style={css.miudosText1}> Termos de Serviço </Text> e
                         <Text style={css.miudosText1}> Política de Privacidade </Text> </Text>
                 </View>
-
             </View>
         </KeyboardAvoidingView>
     );

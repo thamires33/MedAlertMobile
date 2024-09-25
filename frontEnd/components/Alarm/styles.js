@@ -27,11 +27,11 @@ const styles = StyleSheet.create({
   profileIconContainer: {
     padding: 8,
   },
-  profileIcon: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-  },
+ // profileIcon: {
+   // width: 32,
+   // height: 32,
+  //  borderRadius: 16,
+ // },
   card: {
     margin: 16,
     padding: 16,
