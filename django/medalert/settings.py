@@ -29,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = f'{os.getenv('SECRET_KEY')}'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(';')
 CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS').split(';')
@@ -41,15 +41,15 @@ CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS').split(';')
 # Application definition
 
 INSTALLED_APPS = [
-    'alarmes.apps.AlarmesConfig',
-    'medicamentos.apps.MedicamentosConfig',
-    'usuarios.apps.UsuariosConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'alarmes',
+    'medicamentos',
+    'usuarios',
 ]
 
 MIDDLEWARE = [
