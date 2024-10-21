@@ -8,4 +8,4 @@ class Alarme(models.Model):
     medicamento = models.ForeignKey(Medicamento, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"Alarme para {self.fk_medicamento.nome}"
+        return f"Alarme para {self.medicamento.nome}"
