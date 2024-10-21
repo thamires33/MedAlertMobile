@@ -34,59 +34,59 @@ ESTADOS_BRASIL = [
 # https://sistemas.cfm.org.br/normas/visualizar/resolucoes/BR/2018/2221
 
 ESPECIALIDADES = [
-        (1, 'Acupuntura')
-        (2, 'Alergia e Imunologia')
-        (3, 'Anestesiologia')
-        (4, 'Angiologia')
-        (5, 'Cardiologia')
-        (6, 'Cirurgia Cardiovascular')
-        (7, 'Cirurgia da Mão')
-        (8, 'Cirurgia de Cabeça e Pescoço')
-        (9, 'Cirurgia do Aparelho Digestivo')
-        (10, 'Cirurgia Geral')
-        (11, 'Cirurgia Oncológica')
-        (12, 'Cirurgia Pediátrica')
-        (13, 'Cirurgia Plástica')
-        (14, 'Cirurgia Torácica')
-        (15, 'Cirurgia Vascular')
-        (16, 'Clínica Médica')
-        (17, 'Coloproctologia')
-        (18, 'Dermatologia')
-        (19, 'Endocrinologia e Metabologia')
-        (20, 'Endoscopia')
-        (21, 'Gastroenterologia')
-        (22, 'Genética Médica')
-        (23, 'Geriatria')
-        (24, 'Ginecologia e Obstetrícia')
-        (25, 'Hematologia e Hemoterapia')
-        (26, 'Homeopatia')
-        (27, 'Infectologia')
-        (28, 'Mastologia')
-        (29, 'Medicina de Emergência')
-        (30, 'Medicina de Família e Comunidade')
-        (31, 'Medicina do Trabalho')
-        (32, 'Medicina de Tráfego')
-        (33, 'Medicina Esportiva')
-        (34, 'Medicina Física e Reabilitação')
-        (35, 'Medicina Intensiva')
-        (36, 'Medicina Legal e Perícia Médica')
-        (37, 'Medicina Nuclear')
-        (38, 'Medicina Preventiva e Social')
-        (39, 'Nefrologia')
-        (40, 'Neurocirurgia')
-        (41, 'Neurologia')
-        (42, 'Nutrologia')
-        (43, 'Oftalmologia')
-        (44, 'Oncologia Clínica')
-        (45, 'Ortopedia e Traumatologia')
-        (46, 'Otorrinolaringologia')
-        (47, 'Patologia')
-        (48, 'Patologia Clínica/ Medicina Laboratorial')
-        (49, 'Pediatria')
-        (50, 'Pneumologia')
-        (51, 'Psiquiatria')
-        (52, 'Radiologia e Diagnóstico por Imagem')
-        (53, 'Radioterapia')
-        (54, 'Reumatologia')
-        (55, 'Urologia')
+        (1, 'Acupuntura'),
+        (2, 'Alergia e Imunologia'),
+        (3, 'Anestesiologia'),
+        (4, 'Angiologia'),
+        (5, 'Cardiologia'),
+        (6, 'Cirurgia Cardiovascular'),
+        (7, 'Cirurgia da Mão'),
+        (8, 'Cirurgia de Cabeça e Pescoço'),
+        (9, 'Cirurgia do Aparelho Digestivo'),
+        (10, 'Cirurgia Geral'),
+        (11, 'Cirurgia Oncológica'),
+        (12, 'Cirurgia Pediátrica'),
+        (13, 'Cirurgia Plástica'),
+        (14, 'Cirurgia Torácica'),
+        (15, 'Cirurgia Vascular'),
+        (16, 'Clínica Médica'),
+        (17, 'Coloproctologia'),
+        (18, 'Dermatologia'),
+        (19, 'Endocrinologia e Metabologia'),
+        (20, 'Endoscopia'),
+        (21, 'Gastroenterologia'),
+        (22, 'Genética Médica'),
+        (23, 'Geriatria'),
+        (24, 'Ginecologia e Obstetrícia'),
+        (25, 'Hematologia e Hemoterapia'),
+        (26, 'Homeopatia'),
+        (27, 'Infectologia'),
+        (28, 'Mastologia'),
+        (29, 'Medicina de Emergência'),
+        (30, 'Medicina de Família e Comunidade'),
+        (31, 'Medicina do Trabalho'),
+        (32, 'Medicina de Tráfego'),
+        (33, 'Medicina Esportiva'),
+        (34, 'Medicina Física e Reabilitação'),
+        (35, 'Medicina Intensiva'),
+        (36, 'Medicina Legal e Perícia Médica'),
+        (37, 'Medicina Nuclear'),
+        (38, 'Medicina Preventiva e Social'),
+        (39, 'Nefrologia'),
+        (40, 'Neurocirurgia'),
+        (41, 'Neurologia'),
+        (42, 'Nutrologia'),
+        (43, 'Oftalmologia'),
+        (44, 'Oncologia Clínica'),
+        (45, 'Ortopedia e Traumatologia'),
+        (46, 'Otorrinolaringologia'),
+        (47, 'Patologia'),
+        (48, 'Patologia Clínica/ Medicina Laboratorial'),
+        (49, 'Pediatria'),
+        (50, 'Pneumologia'),
+        (51, 'Psiquiatria'),
+        (52, 'Radiologia e Diagnóstico por Imagem'),
+        (53, 'Radioterapia'),
+        (54, 'Reumatologia'),
+        (55, 'Urologia'),
     ]

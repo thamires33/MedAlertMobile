@@ -11,9 +11,9 @@ class Usuario(models.Model):
         abstract = True
 
 class Medico(Usuario):
-    crm = models.CharField(max_length=20)
+    crm = models.CharField(max_length=10)
     estado = models.CharField(max_length=2, choices=ESTADOS_BRASIL)
-    especialidade = models.CharField(max_length=100, choices=ESPECIALIDADES)
+    especialidade = models.CharField(max_length=3, choices=ESPECIALIDADES)
 
     class Meta:
         unique_together = ('crm', 'estado')
@@ -27,4 +27,4 @@ class Paciente(Usuario):
     patologia = models.CharField(max_length=255)
 
     def __str__(self):
-        return f"{self.nome} ({self.email})"
+        return f"{self.nome} - ({self.email})"
