@@ -2,6 +2,7 @@
 from rest_framework import viewsets, status, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
 
 from usuarios.models import Usuario, Paciente, Medico
 from usuarios.serializers import UsuarioSerializer, PacienteSerializer, MedicoSerializer, RegistroSerializer
@@ -23,4 +24,10 @@ class MedicoViewSet(viewsets.ModelViewSet):
 class RegistroUsuario(generics.CreateAPIView):
     queryset = Usuario.objects.all()
     serializer_class = RegistroSerializer
+    permission_classes = [AllowAny]
+
+class NovoRegistroUsuario(generics.CreateAPIView):
+    queryset = Usuario.objects.all()
+    serializer_class = RegistroSerializer
+    permission_classes = [AllowAny]
 
