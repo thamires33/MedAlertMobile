@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, Animated, Alert, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as Google from 'expo-auth-session/providers/google'; // OAuth
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as WebBrowser from 'expo-web-browser'; // OAuth
 import * as LocalAuthentication from 'expo-local-authentication';
@@ -18,41 +19,28 @@ const LoginScreen = ({ navigation }) => {
     const fadeAnim = useState(new Animated.Value(0))[0];
 
     //#region OAuth
-    const [request, response, promptAsync] = Google.useAuthRequest({
-        expoClientId: '869491331341-ikr79v21hqeg2bjkv7a6c46cfo2doe1v.apps.googleusercontent.com',
-        iosClientId: '869491331341-ikr79v21hqeg2bjkv7a6c46cfo2doe1v.apps.googleusercontent.com',
+    GoogleSignin.configure({
         androidClientId: '869491331341-ddmrcksm97vb14lg5nqnaua90emkqdrg.apps.googleusercontent.com',
-        webClientId: '869491331341-ikr79v21hqeg2bjkv7a6c46cfo2doe1v.apps.googleusercontent.com',
-    });
+      });
 
-    const callAuthGoogle = () => {
-        promptAsync();
-    };
-
-    useEffect(() => {
-        if (response?.type === 'success') {
-            const { authentication } = response;
-            handleGoogleSignIn(authentication);
-        }
-    }, [response]);
-
-    const handleGoogleSignIn = async (authentication) => {
+    const promptAsync = async () => {
         try {
-            const userInfoResponse = await fetch(
-                'https://www.googleapis.com/oauth2/v3/userinfo',
-                {
-                    headers: { Authorization: `Bearer ${authentication.accessToken}` },
-                }
-            );
-
-            const userInfo = await userInfoResponse.json();
-            await AsyncStorage.setItem('@user', JSON.stringify(userInfo));
-            Alert.alert('Login Successful', `Welcome ${userInfo.name}`);
-            navigation.navigate('Home');
+          await GoogleSignin.hasPlayServices();
+          const userInfo = await GoogleSignin.signIn();
+          Alert(userInfo.user.email, userInfo.user.name);
+          navigation.navigate('Home');
         } catch (error) {
-            Alert.alert('Error', 'Something went wrong during login');
+          if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+            alert('Usuário cancelou o login.');
+          } else if (error.code === statusCodes.IN_PROGRESS) {
+            alert('Operação de login em andamento.');
+          } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+            alert('Play Services não disponível ou desatualizado.');
+          } else {
+            alert('Erro desconhecido: ', JSON.stringify(error));
+          }
         }
-    };
+      };
     //#endregion
 
     //#region card de alerta
@@ -190,7 +178,7 @@ const LoginScreen = ({ navigation }) => {
                     <View style={css.divider} />
                 </View>
 
-                <TouchableOpacity style={css.googleButton} onPress={callAuthGoogle}>
+                <TouchableOpacity style={css.googleButton} onPress={() => promptAsync()}>
                     <Image
                         source={require('../../assets/Login/google.png')}
                         style={css.googleIcon}

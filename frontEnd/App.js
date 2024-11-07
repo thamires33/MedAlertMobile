@@ -9,15 +9,17 @@ import AlarmScreen from './components/Alarm/AlarmScreen';
 import CadastroScreen from './components/Cadastro/CadastroScreen';
 import HomeScreen from './components/Home/HomeScreen';
 
+import RegisterScreen from './components/Login/RegisterScreen';
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Login"
+        initialRouteName="Registro"
         screenOptions={{ headerShown: false }}
       >
+        <Stack.Screen name="Registro" component={RegisterScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Alarm" component={AlarmScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
