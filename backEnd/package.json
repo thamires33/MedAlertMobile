@@ -16,8 +16,9 @@
     "cors": "^2.8.5",
     "crypto-browserify": "^3.12.0",
     "express": "^4.19.2",
-<<<<<<< HEAD
     "mysql2": "^3.9.7",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.74.1",
@@ -39,15 +40,4 @@
     "typescript": "~5.3.3"
   },
   "private": true
-=======
-    "jest": "^29.7.0",
-    "jsonwebtoken": "^9.0.2",
-    "mysql2": "^3.10.1",
-    "passport": "^0.7.0",
-    "passport-jwt": "^4.0.1",
-    "react-native-push-notification": "^8.1.1",
-    "sequelize": "^6.37.3",
-    "supertest": "^7.0.0"
-  }
->>>>>>> c184943b1c6e5bab1eba3d54e6d7fd021d1af7bd
 }
