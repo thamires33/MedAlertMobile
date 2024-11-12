@@ -13,7 +13,7 @@ WebBrowser.maybeCompleteAuthSession(); // OAuth
 
 const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
-    const [senha, setSenha] = useState('');
+    const [password, setPassword] = useState('');
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const fadeAnim = useState(new Animated.Value(0))[0];
@@ -70,24 +70,24 @@ const LoginScreen = ({ navigation }) => {
     //#region Validação do login
     const handleLogin = async () => {
         try {
-            const response = await fetch(`${apiEndpoint}/login`, {
+            const response = await fetch(`${apiEndpoint}/login/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ email, senha })
+                body: JSON.stringify({ email, password })
             });
-
+    
             const data = await response.json();
-
-            if (data.success) {
-                // Token salvo aqui, repassar onde precisa
-                await AsyncStorage.setItem('token', data.token);
+    
+            if (response.ok) {
+                await AsyncStorage.setItem('accessToken', `Bearer ${data.access}`);
+                await AsyncStorage.setItem('refreshToken', `Bearer ${data.refresh}`);
                 navigation.navigate('Home');
                 console.log('Login bem-sucedido');
             } else {
                 setShowAlert(true);
-                Alert.alert('Erro', data.message);
+                Alert.alert('Erro', data.message || 'Erro no login');
             }
         } catch (error) {
             console.error('Erro ao fazer login:', error);
@@ -152,7 +152,7 @@ const LoginScreen = ({ navigation }) => {
                         style={css.login__input}
                         placeholder='Senha:'
                         secureTextEntry={!isPasswordVisible}
-                        onChangeText={setSenha}
+                        onChangeText={setPassword}
                     />
 
                     <TouchableOpacity onPress={handlePasswordVisibility} style={css.icon}>
@@ -189,7 +189,7 @@ const LoginScreen = ({ navigation }) => {
                 <View style={css.miudosContainer2}>
                     <Text style={css.miudosText4}>
                         Não possui uma conta?
-                        <TouchableOpacity onPress={() => navigation.navigate('Cadastro')}>
+                        <TouchableOpacity onPress={() => navigation.navigate('Registro')}>
                             <Text style={css.miudosText3}> Cadastre-se </Text>
                         </TouchableOpacity>
                     </Text>
