@@ -8,6 +8,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF'
 
     },
+
+    scrollView: {
+        flex: 1,
+      },
+
     //#region cabeçalho logo
     logo_cadastro: {
         marginTop: 50,
@@ -42,6 +47,15 @@ const styles = StyleSheet.create({
         marginBottom: 30,
         marginTop: 10,
     },
+
+    inputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignSelf: 'center',
+        marginBottom: 2,
+        marginTop: 2,
+    },
+
     cadastro__input: {
         backgroundColor: "#EEEEEE",
         fontSize: 19,
@@ -56,7 +70,8 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         borderRadius: 20,
         padding: 10,
-        width: 200
+        width: 200,
+        marginTop: 20,
     },
     cadastro__buttonText: {
         fontSize: 18,
