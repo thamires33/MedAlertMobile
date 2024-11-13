@@ -10,7 +10,7 @@ const RegisterScreen = ({ navigation }) => {
     const [lastName, setLastName] = useState('');
     const [password1, setPassword1] = useState('');
     const [password2, setPassword2] = useState('');
-    const [userType, setUserType] = useState('paciente');
+    const [user_type, setUser_type] = useState('PAC');
     const [idade, setIdade] = useState('');
     const [showAlert, setShowAlert] = useState(false);
 
@@ -28,13 +28,13 @@ const RegisterScreen = ({ navigation }) => {
                     last_name: lastName,
                     password1,
                     password2,
-                    user_type: userType,
+                    user_type: user_type,
                     idade: parseInt(idade)
                 })
             });
-    
+
             const data = await response.json();
-    
+
             if (response.ok && data) {
                 // Verifica se o cadastro foi bem-sucedido com base na estrutura da resposta
                 Alert.alert('Sucesso', 'Usuário cadastrado com sucesso!');
@@ -52,10 +52,12 @@ const RegisterScreen = ({ navigation }) => {
         <KeyboardAvoidingView style={[css.container, css.darkbg]}>
 
             <View style={css.logo_cadastro}>
-                <Image
-                    source={require('../../assets/Login/logo.png')}
-                    style={css.logo}
-                />
+                <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                    <Image
+                        source={require('../../assets/Login/logo.png')}
+                        style={css.logo}
+                    />
+                </TouchableOpacity>
                 <Text style={css.cadastro_title}>MedAlert</Text>
             </View>
 
