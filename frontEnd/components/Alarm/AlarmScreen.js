@@ -8,15 +8,18 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import * as ImagePicker from 'expo-image-picker'; // Camera
 import styles from "./styles";
 import { apiEndpoint } from '../../config/Constants';
+import { access_token } from '../../config/Constants';
 
 const AlarmScreen = () => {
-  const [medicamento, setMedicamento] = useState('');
+  const [nome, setNome] = useState('');
   const [dosagem, setDosagem] = useState('');
   const [unidade, setUnidade] = useState('');
   const [frequencia, setFrequencia] = useState('');
   const [date, setDate] = useState(new Date());
   const [image, setImage] = useState(null); // Camera
-  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [data, setData] = useState('');
+  const [horario, setHorario] = useState('');
+  // const [showDatePicker, setShowDatePicker] = useState(false);
   const navigation = useNavigation();
   const [isAlarmEnabled, setIsAlarmEnabled] = useState(false);
 
@@ -41,34 +44,37 @@ const AlarmScreen = () => {
 
   const handleCadastro = async () => {
     try {
-      const token = await AsyncStorage.getItem('token');
+      const token = await AsyncStorage.getItem(access_token);
 
       if (!token) {
         Alert.alert('Erro', 'Token de autenticação não encontrado.');
         return;
       }
 
-      const data = {
-        medicamento,
+      const dados = {
+        usuario: '5', // TODO: Alterar para o usuário logado
+        nome,
         dosagem,
         unidade,
         frequencia,
-        imageUri: image // Camera
+        data: data,
+        horario: horario,
+        imagEM: image // Camera
       };
 
-      const response = await fetch(`${apiEndpoint}/alarme`, {
+      const response = await fetch(`${apiEndpoint}/medicamentos/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(dados)
       });
 
       const result = await response.json();
       //#region Evento Calendario
-      if (result.message === 'Alarme cadastrado com sucesso') {
-        Alert.alert('Sucesso', 'Alarme cadastrado com sucesso');
+      if (response.status == 201) {
+        alert('Medicamento cadastrado com sucesso!');
 
         try {
           const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);
@@ -145,11 +151,11 @@ const AlarmScreen = () => {
         </View>
 
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Cadastrar Remédios</Text>
+          <Text style={styles.cardTitle}>Cadastrar medicamentos</Text>
           <View style={styles.separator} />
 
-          <Text style={styles.label}>Medicamento</Text>
-          <TextInput style={styles.input} placeholder="Nome do medicamento" value={medicamento} onChangeText={setMedicamento} />
+          <Text style={styles.label}>Nome do medicamento</Text>
+          <TextInput style={styles.input} placeholder="Nome do medicamento" value={nome} onChangeText={setNome} />
 
           <View style={styles.row}>
             <View style={styles.halfContainer}>
@@ -162,23 +168,21 @@ const AlarmScreen = () => {
             </View>
           </View>
 
-          <Text style={styles.label}>Frequência (em horas)</Text>
-          <TextInput style={styles.input} placeholder="Frequência" keyboardType="numeric" value={frequencia} onChangeText={setFrequencia} />
+          <View style={styles.row}>
+            <View style={styles.halfContainer}>
+              <Text style={styles.label}>Data</Text>
+              <TextInput style={styles.input} placeholder="Data" value={data} onChangeText={setData} />
+            </View>
+            <View style={styles.halfContainer}>
+              <Text style={styles.label}>Hora</Text>
+              <TextInput style={styles.input} placeholder="Horário" value={horario} onChangeText={setHorario} />
+            </View>
+          </View>
 
           <View style={styles.row}>
             <View style={styles.halfContainer}>
-              <Text style={styles.label}>Data e Hora</Text>
-              <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-                <Text style={styles.input}>{date.toLocaleString()}</Text>
-              </TouchableOpacity>
-              {showDatePicker && (
-                <DateTimePicker
-                  value={date}
-                  mode="date"
-                  display="default"
-                  onChange={handleDateChange}
-                />
-              )}
+              <Text style={styles.label}>Frequência</Text>
+              <TextInput style={styles.input} placeholder="Frequência" keyboardType="numeric" value={frequencia} onChangeText={setFrequencia} />
             </View>
             <View style={styles.halfContainer}>
               <Text style={styles.label}>Alarme</Text>
