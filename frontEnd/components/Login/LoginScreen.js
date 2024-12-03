@@ -135,13 +135,13 @@ const LoginScreen = ({ navigation }) => {
     //#endregion
 
     return (
-        <KeyboardAvoidingView style={[css.container, css.darkbg]} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <KeyboardAvoidingView style={[css.container, css.darkbg]} behavior={Platform.OS === 'android' ? 'padding' : 'height'}>
             <View style={css.logo_login}>
                 <Image
                     source={require('../../assets/Login/logo.png')}
                     style={css.logo}
                 />
-                <Text style={css.login_title}>MedAlert</Text>
+                <Text style={css.login_title}>Login</Text>
             </View>
 
             {showAlert && (

@@ -71,34 +71,34 @@ const HomeScreen = () => {
     function Listagem({ data }) {
         return (
             <View style={styles.card}>
-                <View style={styles.titleLine}>
-                    {/* Exibição do nome do medicamento */}
-                    <Text style={styles.cardTitle}>{data.medicamento}</Text>
-                </View>
-    
-                {/* Exibição da dose recomendada */}
+                <Text style={styles.cardTitle}>{data.paciente.first_name} {data.paciente.last_name}</Text>
                 <Text style={styles.cardSubtitle}>
-                    Dose: {data.dose}
+                    <Text style={styles.boldText}>Medicamento:</Text> {data.medicamento}
                 </Text>
-    
-                {/* Exibição da recomendação médica */}
                 <Text style={styles.cardSubtitle}>
-                    Recomendação: {data.recomendacao || "Nenhuma recomendação específica"}
+                    <Text style={styles.boldText}>Dose:</Text> {data.dose}
                 </Text>
-    
-                {/* Informações adicionais do paciente (opcional) */}
                 <Text style={styles.cardSubtitle}>
-                    Paciente: {data.paciente || "Não informado"}
+                    <Text style={styles.boldText}>Recomendação:</Text> {data.recomendacao || "Nenhuma recomendação específica"}
                 </Text>
-    
-                {/* Botão para indicar que o medicamento foi tomado */}
+                <Text style={styles.cardSubtitle}>
+                    <Text style={styles.boldText}>Médico responsável:</Text> {data.medico.first_name} {data.medico.last_name}
+                </Text>
+                <Text style={styles.cardSubtitle}>
+                    <Text style={styles.boldText}>Início do alarme:</Text> {new Date(data.alarme.inicio).toLocaleString()}
+                </Text>
+                <Text style={styles.cardSubtitle}>
+                    <Text style={styles.boldText}>Intervalo de horas:</Text> {data.alarme.intervalo_horas}
+                </Text>
+                <Text style={styles.cardSubtitle}>
+                    <Text style={styles.boldText}>Duração do alarme (dias):</Text> {data.alarme.duracao_dias}
+                </Text>
                 <TouchableOpacity style={styles.takeButton}>
                     <Text style={styles.takeButtonText}>Tomar</Text>
                 </TouchableOpacity>
             </View>
         );
     }
-    
 
     return (
         <View style={styles.container}>

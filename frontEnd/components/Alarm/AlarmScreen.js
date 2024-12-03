@@ -132,9 +132,10 @@ const AlarmScreen = () => {
           <TouchableOpacity onPress={() => navigation.openDrawer()} style={styles.menuIconContainer}>
             <Icon name="menu" size={24} color="#000" />
           </TouchableOpacity>
-          <View style={styles.headerTextContainer}>
-            <Text style={styles.headerTextRegular}>MedAlert</Text>
-          </View>
+        </View>
+        <View style={styles.headerTextContainer}>
+          <Text style={styles.headerTextRegular}>MedAlert</Text>
+
           <TouchableOpacity style={styles.profileIconContainer}>
             <Image
               source={{ uri: 'https://via.placeholder.com/150' }} // Imagem de perfil do usuário
