@@ -19,18 +19,15 @@ import styles from "./styles";
 import { apiEndpoint } from "../../config/Constants";
 import getUserIdFromToken from "../../utils/getUserId";
 import { access_token } from "../../config/Constants";
-import DateInput from "../Inputs/DateInput";
-import TimeInput from "../Inputs/TimeInput";
-import { format } from "date-fns";
 
 const AlarmScreen = () => {
   const [nome, setNome] = useState("");
   const [dosagem, setDosagem] = useState("");
   const [unidade, setUnidade] = useState("");
   const [frequencia, setFrequencia] = useState("");
-  const [image, setImage] = useState(null);
   const [data, setData] = useState("");
-  const [selectedTime, setSelectedTime] = useState(new Date());
+  const [selectedTime, setSelectedTime] = useState("");
+  const [image, setImage] = useState(null);
   const [isAlarmEnabled, setIsAlarmEnabled] = useState(false);
   const navigation = useNavigation();
 
@@ -38,66 +35,59 @@ const AlarmScreen = () => {
     (async () => {
       const { status } = await Calendar.requestCalendarPermissionsAsync();
       if (status !== "granted") {
-        Alert.alert(
-          "Permissão Negada",
-          "Permissões do calendário são necessárias."
-        );
+        Alert.alert("Permissão Negada", "Permissões do calendário são necessárias.");
       }
     })();
   }, []);
 
-  const handleTimeChange = (time) => {
-    setSelectedTime(time);
-  };
-
-  const toggleSwitch = () =>
-    setIsAlarmEnabled((previousState) => !previousState);
+  const toggleSwitch = () => setIsAlarmEnabled((prevState) => !prevState);
 
   const handleCadastro = async () => {
     Alert.alert("Cadastro", "Cadastrando medicamento...");
 
     try {
       const token = await AsyncStorage.getItem(access_token);
-
       if (!token) {
         Alert.alert("Erro", "Token de autenticação não encontrado.");
         return;
       }
 
       const userId = getUserIdFromToken(token);
-
       if (!userId) {
         Alert.alert("Erro", "Usuário inválido ou token expirado.");
         return;
       }
 
-      // Formate data e horario para o formato esperado
-      const formattedDate = format(data, "yyyy-MM-dd"); // Para a data
-      const formattedTime = format(selectedTime, "HH:mm"); // Para o horário
+      const formData = new FormData();
+      formData.append("usuario", userId);
+      formData.append("nome", nome);
+      formData.append("dosagem", dosagem);
+      formData.append("unidade", unidade);
+      formData.append("frequencia", frequencia);
+      formData.append("data", data);
+      formData.append("horario", selectedTime);
+      formData.append("alarme", isAlarmEnabled.toString());
 
-      const dados = {
-        usuario: userId,
-        nome,
-        dosagem,
-        unidade,
-        frequencia,
-        data: formattedDate,
-        horario: formattedTime,
-        imagem: image,
-      };
+      if (image) {
+        const fileName = image.split("/").pop();
+        formData.append("imagem", {
+          uri: image,
+          type: "image/png", // Use o tipo de imagem correto (jpeg, png, etc.)
+          name: fileName,
+        });
+      }
 
       const response = await fetch(`${apiEndpoint}/medicamentos/`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          "Authorization": `Bearer ${token}`,
         },
-        body: JSON.stringify(dados),
+        body: formData,
       });
 
       const result = await response.json();
 
-      if (response.status === 201) {
+      if (response.ok) {
         Alert.alert("Sucesso", "Medicamento cadastrado com sucesso!");
         navigation.navigate("Home", { update: true });
       } else {
@@ -112,17 +102,16 @@ const AlarmScreen = () => {
   const openCamera = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== "granted") {
-      Alert.alert(
-        "Permissão necessária",
-        "Precisamos de permissão para acessar a câmera."
-      );
+      Alert.alert("Permissão necessária", "Precisamos de permissão para acessar a câmera.");
       return;
     }
+
     const result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
+
     if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
@@ -132,16 +121,12 @@ const AlarmScreen = () => {
     <View style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <View style={styles.header}>
-          <TouchableOpacity
-            onPress={() => navigation.openDrawer()}
-            style={styles.menuIconContainer}
-          >
+          <TouchableOpacity onPress={() => navigation.openDrawer()} style={styles.menuIconContainer}>
             <Icon name="menu" size={24} color="#000" />
           </TouchableOpacity>
         </View>
         <View style={styles.headerTextContainer}>
           <Text style={styles.headerTextRegular}>MedAlert</Text>
-
           <TouchableOpacity style={styles.profileIconContainer}>
             <Image
               source={{ uri: "https://via.placeholder.com/150" }} // Imagem de perfil do usuário
@@ -183,15 +168,21 @@ const AlarmScreen = () => {
             </View>
           </View>
 
-          {/* <View>
-            <DateInput onDateChange={setData} />
-            <Text>Data selecionada: {format(data, "yyyy-MM-dd")}</Text>
-          </View>
+          <Text style={styles.label}>Data</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="AAAA-MM-DD"
+            value={data}
+            onChangeText={setData}
+          />
 
-          <View>
-            <TimeInput onTimeChange={handleTimeChange} />
-            <Text>Hora para envio: {format(selectedTime, "HH:mm")}</Text>
-          </View> */}
+          <Text style={styles.label}>Hora</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="HH:MM"
+            value={selectedTime}
+            onChangeText={setSelectedTime}
+          />
 
           <View style={styles.row}>
             <View style={styles.halfContainer}>
