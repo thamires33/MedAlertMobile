@@ -1,123 +1,121 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image, TextInput, Button, Switch, Alert } from 'react-native';
-import * as Calendar from 'expo-calendar';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import * as ImagePicker from 'expo-image-picker'; // Camera
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  TextInput,
+  Button,
+  Switch,
+  Alert,
+} from "react-native";
+import * as Calendar from "expo-calendar";
+import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import * as ImagePicker from "expo-image-picker";
 import styles from "./styles";
-import { apiEndpoint } from '../../config/Constants';
-import { access_token } from '../../config/Constants';
+import { apiEndpoint } from "../../config/Constants";
+import getUserIdFromToken from "../../utils/getUserId";
+import { access_token } from "../../config/Constants";
+import DateInput from "../Inputs/DateInput";
+import TimeInput from "../Inputs/TimeInput";
+import { format } from "date-fns";
 
 const AlarmScreen = () => {
-  const [nome, setNome] = useState('');
-  const [dosagem, setDosagem] = useState('');
-  const [unidade, setUnidade] = useState('');
-  const [frequencia, setFrequencia] = useState('');
-  const [date, setDate] = useState(new Date());
-  const [image, setImage] = useState(null); // Camera
-  const [data, setData] = useState('');
-  const [horario, setHorario] = useState('');
-  // const [showDatePicker, setShowDatePicker] = useState(false);
-  const navigation = useNavigation();
+  const [nome, setNome] = useState("");
+  const [dosagem, setDosagem] = useState("");
+  const [unidade, setUnidade] = useState("");
+  const [frequencia, setFrequencia] = useState("");
+  const [image, setImage] = useState(null);
+  const [data, setData] = useState("");
+  const [selectedTime, setSelectedTime] = useState(new Date());
   const [isAlarmEnabled, setIsAlarmEnabled] = useState(false);
+  const navigation = useNavigation();
 
   useEffect(() => {
     (async () => {
       const { status } = await Calendar.requestCalendarPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert('Permissão Negada', 'Permissões do calendário são necessárias.');
+      if (status !== "granted") {
+        Alert.alert(
+          "Permissão Negada",
+          "Permissões do calendário são necessárias."
+        );
       }
     })();
   }, []);
 
-  const toggleSwitch = () => setIsAlarmEnabled(previousState => !previousState);
-
-  const handleDateChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    if (event.type === "set") {
-      setDate(currentDate);
-    }
-    setShowDatePicker(false);
+  const handleTimeChange = (time) => {
+    setSelectedTime(time);
   };
 
+  const toggleSwitch = () =>
+    setIsAlarmEnabled((previousState) => !previousState);
+
   const handleCadastro = async () => {
+    Alert.alert("Cadastro", "Cadastrando medicamento...");
+
     try {
       const token = await AsyncStorage.getItem(access_token);
 
       if (!token) {
-        Alert.alert('Erro', 'Token de autenticação não encontrado.');
+        Alert.alert("Erro", "Token de autenticação não encontrado.");
         return;
       }
 
+      const userId = getUserIdFromToken(token);
+
+      if (!userId) {
+        Alert.alert("Erro", "Usuário inválido ou token expirado.");
+        return;
+      }
+
+      // Formate data e horario para o formato esperado
+      const formattedDate = format(data, "yyyy-MM-dd"); // Para a data
+      const formattedTime = format(selectedTime, "HH:mm"); // Para o horário
+
       const dados = {
-        usuario: '5', // TODO: Alterar para o usuário logado
+        usuario: userId,
         nome,
         dosagem,
         unidade,
         frequencia,
-        data: data,
-        horario: horario,
-        imagEM: image // Camera
+        data: formattedDate,
+        horario: formattedTime,
+        imagem: image,
       };
 
       const response = await fetch(`${apiEndpoint}/medicamentos/`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(dados)
+        body: JSON.stringify(dados),
       });
 
       const result = await response.json();
-      //#region Evento Calendario
-      if (response.status == 201) {
-        alert('Medicamento cadastrado com sucesso!');
 
-        try {
-          const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);
-          const defaultCalendar = calendars.find(calendar => calendar.source.name === 'Default') || calendars[0];
-
-          if (defaultCalendar) {
-            const eventDetails = {
-              title: medicamento,
-              startDate: date,
-              endDate: new Date(date.getTime() + 60 * 60 * 1000),
-              timeZone: Calendar.DEFAULT,
-              notes: `${dosagem} ${unidade} - Frequência: ${frequencia} horas`,
-              recurrenceRule: {
-                frequency: Calendar.Frequency.HOURLY,
-                interval: parseInt(frequencia),
-              },
-            };
-            await Calendar.createEventAsync(defaultCalendar.id, eventDetails);
-            Alert.alert('Evento Criado', 'O evento foi adicionado ao calendário.');
-          } else {
-            Alert.alert('Erro', 'Calendário padrão não foi encontrado.');
-          }
-        } catch (error) {
-          console.error('Erro ao criar evento:', error);
-          Alert.alert('Erro', 'Erro ao criar evento no calendário. Verifique as permissões e tente novamente.');
-        }
-
-        navigation.navigate('Home', { update: true });
+      if (response.status === 201) {
+        Alert.alert("Sucesso", "Medicamento cadastrado com sucesso!");
+        navigation.navigate("Home", { update: true });
       } else {
-        Alert.alert('Erro', result.message || 'Erro desconhecido');
+        Alert.alert("Erro", result.message || "Erro desconhecido");
       }
     } catch (error) {
-      console.error('Erro:', error);
-      Alert.alert('Erro', 'Erro ao conectar ao servidor');
+      console.error("Erro ao cadastrar:", error);
+      Alert.alert("Erro", "Erro ao conectar ao servidor");
     }
   };
-  //#endregion
 
-  //#region camera
   const openCamera = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
-    if (status !== 'granted') {
-      Alert.alert('Permissão necessária', 'Precisamos de permissão para acessar a câmera.');
+    if (status !== "granted") {
+      Alert.alert(
+        "Permissão necessária",
+        "Precisamos de permissão para acessar a câmera."
+      );
       return;
     }
     const result = await ImagePicker.launchCameraAsync({
@@ -129,13 +127,15 @@ const AlarmScreen = () => {
       setImage(result.assets[0].uri);
     }
   };
-  //#endregion
 
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.openDrawer()} style={styles.menuIconContainer}>
+          <TouchableOpacity
+            onPress={() => navigation.openDrawer()}
+            style={styles.menuIconContainer}
+          >
             <Icon name="menu" size={24} color="#000" />
           </TouchableOpacity>
         </View>
@@ -144,7 +144,7 @@ const AlarmScreen = () => {
 
           <TouchableOpacity style={styles.profileIconContainer}>
             <Image
-              source={{ uri: 'https://via.placeholder.com/150' }} // Imagem de perfil do usuário
+              source={{ uri: "https://via.placeholder.com/150" }} // Imagem de perfil do usuário
               style={styles.profileIcon}
             />
           </TouchableOpacity>
@@ -155,41 +155,58 @@ const AlarmScreen = () => {
           <View style={styles.separator} />
 
           <Text style={styles.label}>Nome do medicamento</Text>
-          <TextInput style={styles.input} placeholder="Nome do medicamento" value={nome} onChangeText={setNome} />
+          <TextInput
+            style={styles.input}
+            placeholder="Nome do medicamento"
+            value={nome}
+            onChangeText={setNome}
+          />
 
           <View style={styles.row}>
             <View style={styles.halfContainer}>
               <Text style={styles.label}>Dosagem</Text>
-              <TextInput style={styles.input} placeholder="Dose" value={dosagem} onChangeText={setDosagem} />
+              <TextInput
+                style={styles.input}
+                placeholder="Dose"
+                value={dosagem}
+                onChangeText={setDosagem}
+              />
             </View>
             <View style={styles.halfContainer}>
               <Text style={styles.label}>Unidade</Text>
-              <TextInput style={styles.input} placeholder="Unidade" value={unidade} onChangeText={setUnidade} />
+              <TextInput
+                style={styles.input}
+                placeholder="Unidade"
+                value={unidade}
+                onChangeText={setUnidade}
+              />
             </View>
           </View>
 
-          <View style={styles.row}>
-            <View style={styles.halfContainer}>
-              <Text style={styles.label}>Data</Text>
-              <TextInput style={styles.input} placeholder="Data" value={data} onChangeText={setData} />
-            </View>
-            <View style={styles.halfContainer}>
-              <Text style={styles.label}>Hora</Text>
-              <TextInput style={styles.input} placeholder="Horário" value={horario} onChangeText={setHorario} />
-            </View>
+          {/* <View>
+            <DateInput onDateChange={setData} />
+            <Text>Data selecionada: {format(data, "yyyy-MM-dd")}</Text>
           </View>
+
+          <View>
+            <TimeInput onTimeChange={handleTimeChange} />
+            <Text>Hora para envio: {format(selectedTime, "HH:mm")}</Text>
+          </View> */}
 
           <View style={styles.row}>
             <View style={styles.halfContainer}>
               <Text style={styles.label}>Frequência</Text>
-              <TextInput style={styles.input} placeholder="Frequência" keyboardType="numeric" value={frequencia} onChangeText={setFrequencia} />
+              <TextInput
+                style={styles.input}
+                placeholder="Frequência"
+                keyboardType="numeric"
+                value={frequencia}
+                onChangeText={setFrequencia}
+              />
             </View>
             <View style={styles.halfContainer}>
               <Text style={styles.label}>Alarme</Text>
-              <Switch
-                onValueChange={toggleSwitch}
-                value={isAlarmEnabled}
-              />
+              <Switch onValueChange={toggleSwitch} value={isAlarmEnabled} />
             </View>
           </View>
 
