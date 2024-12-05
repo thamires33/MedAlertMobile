@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, Animated, Alert, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as Google from 'expo-auth-session/providers/google'; // OAuth
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // AsyncStorage para persistência
 import * as WebBrowser from 'expo-web-browser'; // OAuth
 import * as LocalAuthentication from 'expo-local-authentication';
+import axios from 'axios';  // Incluindo axios para a requisição API
 import css from './styles';
-import { apiEndpoint } from '../../config/Constants';
+import { apiEndpoint, access_token, refresh_token} from '../../config/Constants'; // Defina o endpoint da API
 
 WebBrowser.maybeCompleteAuthSession(); // OAuth
 
@@ -15,6 +16,7 @@ const LoginScreen = ({ navigation }) => {
     const [senha, setSenha] = useState('');
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
+    const [loading, setLoading] = useState(false); // Definindo o estado de loading
     const fadeAnim = useState(new Animated.Value(0))[0];
 
     //#region OAuth
@@ -46,7 +48,7 @@ const LoginScreen = ({ navigation }) => {
             );
 
             const userInfo = await userInfoResponse.json();
-            await AsyncStorage.setItem('@user', JSON.stringify(userInfo));
+            await AsyncStorage.setItem('@user', JSON.stringify(userInfo)); // Usando AsyncStorage
             Alert.alert('Login Successful', `Welcome ${userInfo.name}`);
             navigation.navigate('Home');
         } catch (error) {
@@ -79,33 +81,31 @@ const LoginScreen = ({ navigation }) => {
     };
     //#endregion
 
-    const handleLogin = async () => {
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        setLoading(true);  // Ativa o estado de loading
         try {
-            const response = await fetch(`${apiEndpoint}/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email, senha })
+            // Ajuste na requisição da API Django
+            const response = await axios.post(`${apiEndpoint}/login/`, {
+                email: email,
+                password: senha,
             });
 
-            const data = await response.json();
-
-            if (data.success) {
-                // Token salvo aqui, repassar onde precisa
-                await AsyncStorage.setItem('token', data.token);
-                navigation.navigate('Home');
-                console.log('Login bem-sucedido');
+            // Verifica se o token foi retornado
+            if (response.data.access) {
+                await AsyncStorage.setItem(access_token, response.data.access); // Usando AsyncStorage para persistir o token
+                await AsyncStorage.setItem(refresh_token, response.data.refresh);
+                Alert.alert('Login realizado com sucesso!');
+                navigation.navigate('Home'); // Navegação para Home após login
             } else {
-                setShowAlert(true);
-                Alert.alert('Erro', data.message);
+                Alert.alert('Erro', 'Token não encontrado. Verifique a resposta da API.');
             }
         } catch (error) {
-            console.error('Erro ao fazer login:', error);
-            Alert.alert('Erro', 'Erro ao conectar ao servidor');
+            Alert.alert('Erro', 'Erro ao fazer login. Verifique suas credenciais.');
+        } finally {
+            setLoading(false);  // Desativa o estado de loading
         }
     };
-    //#endregion
 
     //#region autenticação biométrica
     const handleBiometricLogin = async () => {
@@ -135,13 +135,13 @@ const LoginScreen = ({ navigation }) => {
     //#endregion
 
     return (
-        <KeyboardAvoidingView style={[css.container, css.darkbg]} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <KeyboardAvoidingView style={[css.container, css.darkbg]} behavior={Platform.OS === 'android' ? 'padding' : 'height'}>
             <View style={css.logo_login}>
                 <Image
                     source={require('../../assets/Login/logo.png')}
                     style={css.logo}
                 />
-                <Text style={css.login_title}>MedAlert</Text>
+                <Text style={css.login_title}>Login</Text>
             </View>
 
             {showAlert && (
