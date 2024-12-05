@@ -156,6 +156,8 @@ const LoginScreen = ({ navigation }) => {
                     style={css.login__input}
                     placeholder='Usuário:'
                     onChangeText={setEmail}
+                    keyboardType='email-address'
+                   autoCapitalize='none'
                 />
 
                 <View style={css.passwordContainer}>
@@ -164,6 +166,7 @@ const LoginScreen = ({ navigation }) => {
                         placeholder='Senha:'
                         secureTextEntry={!isPasswordVisible}
                         onChangeText={setSenha}
+                        autoCapitalize='none'
                     />
 
                     <TouchableOpacity onPress={handlePasswordVisibility} style={css.icon}>
