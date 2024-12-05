@@ -5,8 +5,7 @@ import { useNavigation, useIsFocused, useFocusEffect } from '@react-navigation/n
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 import styles from "./styles";
-import { apiEndpoint } from "../../config/Constants";
-
+import { apiEndpoint, access_token } from "../../config/Constants";
 const HomeScreen = () => {
     const navigation = useNavigation();
     const [alarmes, setAlarmes] = useState([]);
@@ -15,7 +14,7 @@ const HomeScreen = () => {
     // Função para buscar os alarmes do servidor
     const fetchAllAlarmes = async () => {
         try {
-            const token = await AsyncStorage.getItem('access_token');
+            const token = await AsyncStorage.getItem(access_token);
             if (!token) {
                 throw new Error('Token não encontrado');
             }
