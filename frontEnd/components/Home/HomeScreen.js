@@ -171,12 +171,12 @@ const HomeScreen = () => {
                 </ScrollView>
 
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity
+                    {/* <TouchableOpacity
                         style={styles.addButton}
                         onPress={() => navigation.navigate('Alarm')}
                     >
                         <Text style={styles.txtAddButton}>Adicionar Remédio</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
 
                 {/* Modal de confirmação */}

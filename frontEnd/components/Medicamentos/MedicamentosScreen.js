@@ -103,7 +103,7 @@ const MedicamentosScreen = () => {
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity
                         style={styles.addButton}
-                        onPress={() => navigation.navigate('Cadastro')}
+                        onPress={() => navigation.navigate('Alarm')}
                     >
                         <Text style={styles.txtAddButton}>Adicionar Medicamento</Text>
                     </TouchableOpacity>

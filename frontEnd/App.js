@@ -26,7 +26,7 @@ export default function App() {
         <Stack.Screen name="Registro" component={RegisterScreen} />
         <Stack.Screen name="Cadastro" component={CadastroScreen} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
-        <Stack.Screen name="Alarm" component={AlarmScreen} />
+        {/* <Stack.Screen name="Alarm" component={AlarmScreen} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
