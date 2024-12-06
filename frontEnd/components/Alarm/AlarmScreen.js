@@ -15,6 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import * as ImagePicker from "expo-image-picker";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import styles from "./styles";
 import { apiEndpoint, access_token } from "../../config/Constants";
 import getUserIdFromToken from "../../utils/getUserId";
@@ -28,6 +29,8 @@ const AlarmScreen = () => {
   const [selectedTime, setSelectedTime] = useState("");
   const [image, setImage] = useState(null);
   const [isAlarmEnabled, setIsAlarmEnabled] = useState(false);
+  const [isDatePickerVisible, setDatePickerVisible] = useState(false);
+  const [isTimePickerVisible, setTimePickerVisible] = useState(false);
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -40,6 +43,22 @@ const AlarmScreen = () => {
   }, []);
 
   const toggleSwitch = () => setIsAlarmEnabled((prevState) => !prevState);
+
+  const showDatePicker = () => setDatePickerVisible(true);
+  const hideDatePicker = () => setDatePickerVisible(false);
+
+  const showTimePicker = () => setTimePickerVisible(true);
+  const hideTimePicker = () => setTimePickerVisible(false);
+
+  const handleDateConfirm = (date) => {
+    setData(date.toISOString().split("T")[0]); // Formato AAAA-MM-DD
+    hideDatePicker();
+  };
+
+  const handleTimeConfirm = (time) => {
+    setSelectedTime(time.toTimeString().substring(0, 5)); // Formato HH:MM
+    hideTimePicker();
+  };
 
   const handleCadastro = async () => {
     Alert.alert("Cadastro", "Cadastrando medicamento...");
@@ -66,6 +85,7 @@ const AlarmScreen = () => {
       formData.append("data", data);
       formData.append("horario", selectedTime);
       formData.append("alarme", isAlarmEnabled.toString());
+      formData.append("imagem", image);
 
       if (image) {
         const fileName = image.split("/").pop();
@@ -79,7 +99,7 @@ const AlarmScreen = () => {
       const response = await fetch(`${apiEndpoint}/medicamentos/`, {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: formData,
       });
@@ -90,7 +110,8 @@ const AlarmScreen = () => {
         Alert.alert("Sucesso", "Medicamento cadastrado com sucesso!");
         navigation.navigate("Home", { update: true });
       } else {
-        Alert.alert("Erro", result.message || "Erro desconhecido");
+        console.log("Erro ao cadastrar:", result);
+        Alert.alert("Erro", result || "Erro desconhecido");
       }
     } catch (error) {
       console.error("Erro ao cadastrar:", error);
@@ -168,20 +189,14 @@ const AlarmScreen = () => {
           </View>
 
           <Text style={styles.label}>Data</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="AAAA-MM-DD"
-            value={data}
-            onChangeText={setData}
-          />
+          <TouchableOpacity onPress={showDatePicker} style={styles.input}>
+            <Text>{data || "Selecione a data"}</Text>
+          </TouchableOpacity>
 
           <Text style={styles.label}>Hora</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="HH:MM"
-            value={selectedTime}
-            onChangeText={setSelectedTime}
-          />
+          <TouchableOpacity onPress={showTimePicker} style={styles.input}>
+            <Text>{selectedTime || "Selecione a hora"}</Text>
+          </TouchableOpacity>
 
           <View style={styles.row}>
             <View style={styles.halfContainer}>
@@ -207,6 +222,22 @@ const AlarmScreen = () => {
           {image && <Image source={{ uri: image }} style={styles.takenPhoto} />}
 
           <Button title="Cadastrar" onPress={handleCadastro} />
+
+          {/* Date Picker Modal */}
+          <DateTimePickerModal
+            isVisible={isDatePickerVisible}
+            mode="date"
+            onConfirm={handleDateConfirm}
+            onCancel={hideDatePicker}
+          />
+
+          {/* Time Picker Modal */}
+          <DateTimePickerModal
+            isVisible={isTimePickerVisible}
+            mode="time"
+            onConfirm={handleTimeConfirm}
+            onCancel={hideTimePicker}
+          />
         </View>
       </ScrollView>
     </View>
