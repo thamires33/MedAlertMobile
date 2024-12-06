@@ -16,9 +16,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import * as ImagePicker from "expo-image-picker";
 import styles from "./styles";
-import { apiEndpoint } from "../../config/Constants";
+import { apiEndpoint, access_token } from "../../config/Constants";
 import getUserIdFromToken from "../../utils/getUserId";
-import { access_token } from "../../config/Constants";
 
 const AlarmScreen = () => {
   const [nome, setNome] = useState("");
