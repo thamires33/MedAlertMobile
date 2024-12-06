@@ -1,34 +1,23 @@
 {
   "expo": {
-    "name": "MedAlertFront",
-    "slug": "MedAlertFront",
-    "scheme": "medalert",
-    "newArchEnabled": true,
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+    "name": "MedAlert",
+    "slug": "medalert",
+    "packagerOpts": {
+      "urlRandomPort": false,
+      "hostType": "tunnel",
+      "sourceExts": [
+        "js",
+        "json",
+        "jsx",
+        "ts",
+        "tsx",
+        "cjs"
+      ]
     },
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "package": "com.anonymous.MedAlertFront"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "501903cf-1b58-468a-9d91-b5468581895e"
+    "debug": {
+      "packagerOpts": {
+        "dev": true,
+        "minify": false
       }
     }
   }
