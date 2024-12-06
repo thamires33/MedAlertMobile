@@ -131,9 +131,6 @@ const HomeScreen = () => {
                     >
                         <Text style={styles.textButton}>Excluir receita</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.takeButton, styles.halfWidthButton]}>
-                        <Text style={styles.textButton}>Tomar</Text>
-                    </TouchableOpacity>
                 </View>
             </View>
         );
