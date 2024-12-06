@@ -156,6 +156,12 @@ const AlarmScreen = () => {
         </View>
 
         <View style={styles.card}>
+        <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={styles.backButton}
+          >
+            <Icon name="arrow-back" size={30} color="#000" />
+          </TouchableOpacity>
           <Text style={styles.cardTitle}>Cadastrar medicamentos</Text>
           <View style={styles.separator} />
 
