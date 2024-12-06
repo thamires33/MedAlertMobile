@@ -4,11 +4,9 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation, useIsFocused, useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
-import styles from "./styles";
 import { apiEndpoint, access_token } from "../../config/Constants";
 import Modal from 'react-native-modal';
 import styles from "./styles"; 
-import { apiEndpoint } from "../../config/Constants";
 
 
 const HomeScreen = () => {

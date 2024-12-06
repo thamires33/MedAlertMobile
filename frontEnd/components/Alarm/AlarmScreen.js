@@ -15,54 +15,74 @@ import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import * as ImagePicker from "expo-image-picker";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import styles from "./styles";
 import { apiEndpoint, access_token } from "../../config/Constants";
 import getUserIdFromToken from "../../utils/getUserId";
 
 const AlarmScreen = () => {
-<<<<<<< HEAD
-  const [nome, setNome] = useState("");
+  const [medicamento, setMedicamento] = useState("");
   const [dosagem, setDosagem] = useState("");
   const [unidade, setUnidade] = useState("");
   const [frequencia, setFrequencia] = useState("");
-  const [data, setData] = useState("");
-  const [selectedTime, setSelectedTime] = useState("");
-  const [image, setImage] = useState(null);
-=======
-  const [medicamento, setMedicamento] = useState('');
-  const [dosagem, setDosagem] = useState('');
-  const [unidade, setUnidade] = useState('');
-  const [frequencia, setFrequencia] = useState('');
   const [date, setDate] = useState(new Date());
   const [image, setImage] = useState(null); // Camera
-  const [showDatePicker, setShowDatePicker] = useState(false);
->>>>>>> dependencies
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isAlarmEnabled, setIsAlarmEnabled] = useState(false);
-  const navigation = useNavigation();
-
   const navigation = useNavigation();
 
   useEffect(() => {
     (async () => {
       const { status } = await Calendar.requestCalendarPermissionsAsync();
       if (status !== "granted") {
-        Alert.alert("Permissão Negada", "Permissões do calendário são necessárias.");
+        Alert.alert(
+          "Permissão Negada",
+          "Permissões do calendário são necessárias."
+        );
       }
     })();
   }, []);
 
   const toggleSwitch = () => setIsAlarmEnabled((prevState) => !prevState);
 
-  const handleCadastro = async () => {
-<<<<<<< HEAD
-    Alert.alert("Cadastro", "Cadastrando medicamento...");
+  const handleDateConfirm = (selectedDate) => {
+    setDate(selectedDate);
+    setDatePickerVisibility(false);
+  };
 
+  const createCalendarEvent = async () => {
+    try {
+      const defaultCalendarSource = Platform.OS === "ios"
+        ? await Calendar.getDefaultCalendarAsync()
+        : { isLocalAccount: true, name: "MedAlert" };
+
+      const calendarId = await Calendar.createCalendarAsync({
+        title: "MedAlert",
+        color: "blue",
+        entityType: Calendar.EntityTypes.EVENT,
+        source: defaultCalendarSource,
+        name: "MedAlert",
+        accessLevel: Calendar.CalendarAccessLevel.OWNER,
+      });
+
+      await Calendar.createEventAsync(calendarId, {
+        title: `Tomar ${medicamento}`,
+        startDate: date,
+        endDate: new Date(date.getTime() + 30 * 60 * 1000), // +30 minutos
+        notes: `Dosagem: ${dosagem} ${unidade}. Frequência: ${frequencia} horas.`,
+        timeZone: "GMT",
+      });
+
+      Alert.alert("Sucesso", "Evento adicionado ao calendário!");
+    } catch (error) {
+      console.error("Erro ao criar evento no calendário:", error);
+      Alert.alert("Erro", "Não foi possível criar o evento.");
+    }
+  };
+
+  const handleCadastro = async () => {
     try {
       const token = await AsyncStorage.getItem(access_token);
-=======
-    try {
-      const token = await AsyncStorage.getItem('token');
->>>>>>> dependencies
       if (!token) {
         Alert.alert("Erro", "Token de autenticação não encontrado.");
         return;
@@ -76,19 +96,19 @@ const AlarmScreen = () => {
 
       const formData = new FormData();
       formData.append("usuario", userId);
-      formData.append("nome", nome);
+      formData.append("nome", medicamento);
       formData.append("dosagem", dosagem);
       formData.append("unidade", unidade);
       formData.append("frequencia", frequencia);
-      formData.append("data", data);
-      formData.append("horario", selectedTime);
+      formData.append("data", date.toISOString().split("T")[0]); // YYYY-MM-DD
+      formData.append("horario", date.toISOString().split("T")[1].slice(0, 5)); // HH:MM
       formData.append("alarme", isAlarmEnabled.toString());
 
       if (image) {
         const fileName = image.split("/").pop();
         formData.append("imagem", {
           uri: image,
-          type: "image/png", // Use o tipo de imagem correto (jpeg, png, etc.)
+          type: "image/png",
           name: fileName,
         });
       }
@@ -96,40 +116,33 @@ const AlarmScreen = () => {
       const response = await fetch(`${apiEndpoint}/medicamentos/`, {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: formData,
       });
 
       const result = await response.json();
-<<<<<<< HEAD
-=======
-
-      //#region Evento Calendario
-      if (result.message === 'Alarme cadastrado com sucesso') {
-        Alert.alert('Sucesso', 'Alarme cadastrado com sucesso');
->>>>>>> dependencies
 
       if (response.ok) {
         Alert.alert("Sucesso", "Medicamento cadastrado com sucesso!");
+        await createCalendarEvent(); // Cria o evento no calendário
         navigation.navigate("Home", { update: true });
       } else {
-        Alert.alert("Erro", result.message || "Erro desconhecido");
+        Alert.alert("Erro", result.message || "Erro desconhecido.");
       }
     } catch (error) {
       console.error("Erro ao cadastrar:", error);
-      Alert.alert("Erro", "Erro ao conectar ao servidor");
+      Alert.alert("Erro", "Erro ao conectar ao servidor.");
     }
   };
 
-<<<<<<< HEAD
-=======
-  //#region Camera
->>>>>>> dependencies
   const openCamera = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== "granted") {
-      Alert.alert("Permissão necessária", "Precisamos de permissão para acessar a câmera.");
+      Alert.alert(
+        "Permissão necessária",
+        "Precisamos de permissão para acessar a câmera."
+      );
       return;
     }
 
@@ -147,32 +160,23 @@ const AlarmScreen = () => {
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView}>
-        <View style={styles.header}>
-<<<<<<< HEAD
-          <TouchableOpacity onPress={() => navigation.openDrawer()} style={styles.menuIconContainer}>
-            <Icon name="menu" size={24} color="#000" />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.headerTextContainer}>
-          <Text style={styles.headerTextRegular}>MedAlert</Text>
-          <TouchableOpacity style={styles.profileIconContainer}>
-            <Image
-              source={{ uri: "https://via.placeholder.com/150" }} // Imagem de perfil do usuário
-              style={styles.profileIcon}
-            />
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+        >
+          <Icon name="arrow-back" size={24} color="#000" />
+        </TouchableOpacity>
 
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Cadastrar medicamentos</Text>
+          <Text style={styles.cardTitle}>Cadastrar Remédios</Text>
           <View style={styles.separator} />
 
-          <Text style={styles.label}>Nome do medicamento</Text>
+          <Text style={styles.label}>Medicamento</Text>
           <TextInput
             style={styles.input}
             placeholder="Nome do medicamento"
-            value={nome}
-            onChangeText={setNome}
+            value={medicamento}
+            onChangeText={setMedicamento}
           />
 
           <View style={styles.row}>
@@ -196,134 +200,36 @@ const AlarmScreen = () => {
             </View>
           </View>
 
-          <Text style={styles.label}>Data</Text>
+          <Text style={styles.label}>Frequência (em horas)</Text>
           <TextInput
             style={styles.input}
-            placeholder="AAAA-MM-DD"
-            value={data}
-            onChangeText={setData}
+            placeholder="Frequência"
+            keyboardType="numeric"
+            value={frequencia}
+            onChangeText={setFrequencia}
           />
 
-          <Text style={styles.label}>Hora</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="HH:MM"
-            value={selectedTime}
-            onChangeText={setSelectedTime}
-          />
-
-          <View style={styles.row}>
-            <View style={styles.halfContainer}>
-              <Text style={styles.label}>Frequência</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Frequência"
-                keyboardType="numeric"
-                value={frequencia}
-                onChangeText={setFrequencia}
-              />
-            </View>
-            <View style={styles.halfContainer}>
-              <Text style={styles.label}>Alarme</Text>
-              <Switch onValueChange={toggleSwitch} value={isAlarmEnabled} />
-=======
-          <TouchableOpacity onPress={() => navigation.navigate('Home')} style={styles.menuIconContainer}>
-            <Icon name="arrow-back" size={24} color="#000" />
+          <Text style={styles.label}>Data e Hora</Text>
+          <TouchableOpacity onPress={() => setDatePickerVisibility(true)}>
+            <Text style={styles.input}>{date.toLocaleString()}</Text>
           </TouchableOpacity>
-        </View>
+          <DateTimePickerModal
+            isVisible={isDatePickerVisible}
+            mode="datetime"
+            onConfirm={handleDateConfirm}
+            onCancel={() => setDatePickerVisibility(false)}
+          />
 
-        <View style={styles.container}>
-          <ScrollView style={styles.scrollView}>
-            <View style={styles.header}>
-              <TouchableOpacity onPress={() => navigation.openDrawer()} style={styles.menuIconContainer}>
-                <Icon name="menu" size={24} color="#000" />
-              </TouchableOpacity>
-            </View>
+          <Text style={styles.label}>Alarme</Text>
+          <Switch onValueChange={toggleSwitch} value={isAlarmEnabled} />
 
-            <View style={styles.headerTextContainer}>
-              <Text style={styles.headerTextRegular}>MedAlert</Text>
+          <TouchableOpacity onPress={openCamera} style={styles.cameraButton}>
+            <Icon name="camera-alt" size={24} color="#000" />
+            <Text style={styles.cameraButtonText}>Tirar Foto</Text>
+          </TouchableOpacity>
+          {image && <Image source={{ uri: image }} style={styles.takenPhoto} />}
 
-              <TouchableOpacity style={styles.profileIconContainer}>
-                <Image
-                  source={{ uri: 'https://via.placeholder.com/150' }} // Imagem de perfil do usuário
-                  style={styles.profileIcon}
-                />
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.card}>
-              <Text style={styles.cardTitle}>Cadastrar Remédios</Text>
-              <View style={styles.separator} />
-
-              <Text style={styles.label}>Medicamento</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Nome do medicamento"
-                value={medicamento}
-                onChangeText={setMedicamento}
-              />
-
-              <View style={styles.row}>
-                <View style={styles.halfContainer}>
-                  <Text style={styles.label}>Dosagem</Text>
-                  <TextInput
-                    style={styles.input}
-                    placeholder="Dose"
-                    value={dosagem}
-                    onChangeText={setDosagem}
-                  />
-                </View>
-                <View style={styles.halfContainer}>
-                  <Text style={styles.label}>Unidade</Text>
-                  <TextInput
-                    style={styles.input}
-                    placeholder="Unidade"
-                    value={unidade}
-                    onChangeText={setUnidade}
-                  />
-                </View>
-              </View>
-
-              <Text style={styles.label}>Frequência (em horas)</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Frequência"
-                keyboardType="numeric"
-                value={frequencia}
-                onChangeText={setFrequencia}
-              />
-
-              <View style={styles.row}>
-                <View style={styles.halfContainer}>
-                  <Text style={styles.label}>Data e Hora</Text>
-                  <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-                    <Text style={styles.input}>{date.toLocaleString()}</Text>
-                  </TouchableOpacity>
-                  {showDatePicker && (
-                    <DateTimePicker
-                      value={date}
-                      mode="date"
-                      display="default"
-                      onChange={handleDateChange}
-                    />
-                  )}
-                </View>
-                <View style={styles.halfContainer}>
-                  <Text style={styles.label}>Alarme</Text>
-                  <Switch onValueChange={toggleSwitch} value={isAlarmEnabled} />
-                </View>
-              </View>
-
-              <TouchableOpacity onPress={openCamera} style={styles.cameraButton}>
-                <Icon name="camera-alt" size={24} color="#000" />
-                <Text style={styles.cameraButtonText}>Tirar Foto</Text>
-              </TouchableOpacity>
-              {image && <Image source={{ uri: image }} style={styles.takenPhoto} />}
-
-              <Button title="Cadastrar" onPress={handleCadastro} />
->>>>>>> dependencies
-            </View>
-          </ScrollView>
+          <Button title="Cadastrar" onPress={handleCadastro} />
         </View>
       </ScrollView>
     </View>

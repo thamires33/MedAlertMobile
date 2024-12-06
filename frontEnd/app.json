@@ -2,6 +2,9 @@
   "expo": {
     "name": "MedAlert",
     "slug": "medalert",
+    "android": {
+      "newArchEnabled": true
+    },
     "packagerOpts": {
       "urlRandomPort": false,
       "hostType": "tunnel",
