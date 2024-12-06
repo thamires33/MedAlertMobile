@@ -1,15 +1,20 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { View, Text, Image, SafeAreaView, Keyboard, ScrollView, TouchableOpacity, BackHandler, Alert } from "react-native";
+import { View, Text, Image, SafeAreaView, Keyboard, ScrollView, TouchableOpacity, BackHandler, Alert, Modal } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation, useIsFocused, useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 import styles from "./styles";
 import { apiEndpoint, access_token } from "../../config/Constants";
+
 const HomeScreen = () => {
     const navigation = useNavigation();
     const [alarmes, setAlarmes] = useState([]);
     const isFocused = useIsFocused();
+
+    // Estados para o modal de confirmação
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [selectedRecipeId, setSelectedRecipeId] = useState(null);
 
     // Função para buscar os alarmes do servidor
     const fetchAllAlarmes = async () => {
@@ -30,7 +35,6 @@ const HomeScreen = () => {
         } catch (err) {
             console.log('Erro ao buscar alarmes:', err);
             if (err.response && err.response.status === 401) {
-                // Token inválido ou expirado, redireciona para a tela de login
                 navigation.navigate('Login');
             }
         }
@@ -51,16 +55,16 @@ const HomeScreen = () => {
 
             if (response.status === 204) {
                 fetchAllAlarmes();
+                setIsModalVisible(false); // Fecha o modal
             }
         } catch (err) {
-            console.log('Erro ao buscar alarmes:', err);
+            console.log('Erro ao excluir receita:', err);
             if (err.response && err.response.status === 401) {
-                // Token inválido ou expirado, redireciona para a tela de login
                 navigation.navigate('Login');
             }
         }
     };
-    
+
     // Efetua a busca quando o componente está visível
     useEffect(() => {
         if (isFocused) {
@@ -118,7 +122,13 @@ const HomeScreen = () => {
                     <Text style={styles.boldText}>Duração do alarme (dias):</Text> {data.alarme.duracao_dias}
                 </Text>
                 <View style={styles.cardButtonContainer}>
-                    <TouchableOpacity style={[styles.excludeButton, styles.halfWidthButton]} onPress={handleDeleteRecipe(data.id)}>
+                    <TouchableOpacity
+                        style={[styles.excludeButton, styles.halfWidthButton]}
+                        onPress={() => {
+                            setSelectedRecipeId(data.id);
+                            setIsModalVisible(true);
+                        }}
+                    >
                         <Text style={styles.textButton}>Excluir receita</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.takeButton, styles.halfWidthButton]}>
@@ -139,8 +149,10 @@ const HomeScreen = () => {
                     <View style={styles.headerTextContainer}>
                         <Text style={styles.headerTextRegular}>MedAlert</Text>
                     </View>
-                    <TouchableOpacity style={styles.profileIconContainer}
-                        onPress={() => navigation.navigate('Profile')}>
+                    <TouchableOpacity
+                        style={styles.profileIconContainer}
+                        onPress={() => navigation.navigate('Profile')}
+                    >
                         <Image
                             source={{ uri: 'https://via.placeholder.com/150' }}
                             style={styles.profileIcon}
@@ -168,9 +180,37 @@ const HomeScreen = () => {
                         <Text style={styles.txtAddButton}>Adicionar Remédio</Text>
                     </TouchableOpacity>
                 </View>
+
+                {/* Modal de confirmação */}
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={isModalVisible}
+                    onRequestClose={() => setIsModalVisible(false)}
+                >
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modalContent}>
+                            <Text style={styles.modalText}>Tem certeza que deseja excluir esta receita?</Text>
+                            <View style={styles.modalButtonContainer}>
+                                <TouchableOpacity
+                                    style={[styles.modalButton, styles.modalCancelButton]}
+                                    onPress={() => setIsModalVisible(false)}
+                                >
+                                    <Text style={styles.modalButtonText}>Cancelar</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={[styles.modalButton, styles.modalConfirmDeleteButton]}
+                                    onPress={() => handleDeleteRecipe(selectedRecipeId)}
+                                >
+                                    <Text style={styles.textButton}>Confirmar</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
             </SafeAreaView>
         </View>
     );
-}
+};
 
 export default HomeScreen;

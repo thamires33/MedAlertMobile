@@ -140,6 +140,46 @@ const styles = StyleSheet.create({
     textButton: {
         color: 'white',
     },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContent: {
+        width: '80%',
+        padding: 20,
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        alignItems: 'center',
+    },
+    modalText: {
+        fontSize: 16,
+        marginBottom: 20,
+        textAlign: 'center',
+    },
+    modalButtonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+    },
+    modalButton: {
+        flex: 1,
+        padding: 10,
+        marginHorizontal: 5,
+        borderRadius: 5,
+        alignItems: 'center',
+    },
+    modalCancelButton: {
+        backgroundColor: '#ccc'
+    },
+    modalConfirmDeleteButton: {
+        backgroundColor: 'red',
+    },
+    modalButtonText: {
+        color: 'black',
+    },
+    
     
 });
 
