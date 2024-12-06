@@ -175,7 +175,7 @@ const HomeScreen = () => {
                         style={styles.addButton}
                         onPress={() => navigation.navigate('Alarm')}
                     >
-                        <Text style={styles.txtAddButton}>Adicionar Remédio</Text>
+                        <Text style={styles.txtAddButton}>Adicionar medicamento</Text>
                     </TouchableOpacity> */}
                 </View>
 
