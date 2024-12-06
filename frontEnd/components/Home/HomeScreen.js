@@ -4,15 +4,13 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation, useIsFocused, useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
-<<<<<<< HEAD
 import styles from "./styles";
 import { apiEndpoint, access_token } from "../../config/Constants";
-=======
 import Modal from 'react-native-modal';
 import styles from "./styles"; 
 import { apiEndpoint } from "../../config/Constants";
 
->>>>>>> dependencies
+
 const HomeScreen = () => {
     const navigation = useNavigation();
     const [alarmes, setAlarmes] = useState([]);
@@ -157,25 +155,6 @@ const HomeScreen = () => {
     return (
         <View style={styles.container}>
             <SafeAreaView style={styles.safeArea}>
-<<<<<<< HEAD
-                <View style={styles.header}>
-                    <TouchableOpacity onPress={() => navigation.openDrawer()} style={styles.menuIconContainer}>
-                        <Icon name="menu" size={24} color="#000" />
-                    </TouchableOpacity>
-                    <View style={styles.headerTextContainer}>
-                        <Text style={styles.headerTextRegular}>MedAlert</Text>
-                    </View>
-                    <TouchableOpacity style={styles.profileIconContainer}
-                        onPress={() => navigation.navigate('Profile')}>
-                        <Image
-                            source={{ uri: 'https://via.placeholder.com/150' }}
-                            style={styles.profileIcon}
-                        />
-                    </TouchableOpacity>
-                </View>
-
-=======
->>>>>>> dependencies
                 <ScrollView contentContainerStyle={styles.scrollViewContentContainer}>
                     {alarmes.length > 0 ? (
                         alarmes.map((item, index) => (
