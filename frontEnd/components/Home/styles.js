@@ -117,6 +117,30 @@ const styles = StyleSheet.create({
         color: '#FFF',
         fontSize: 16,
     },
+    takeButton: {
+        backgroundColor: 'blue',
+    },
+    excludeButton: {
+        backgroundColor: 'red',
+    },
+    cardButtonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 10,
+    },
+    halfWidthButton: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 10,
+        marginHorizontal: 5, // Espaçamento entre os botões
+        borderRadius: 5,
+        color: 'white',
+    },
+    textButton: {
+        color: 'white',
+    },
+    
 });
 
 export default styles;

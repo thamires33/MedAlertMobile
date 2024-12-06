@@ -36,6 +36,31 @@ const HomeScreen = () => {
         }
     };
 
+    const handleDeleteRecipe = async (id) => {
+        try {
+            const token = await AsyncStorage.getItem(access_token);
+            if (!token) {
+                throw new Error('Token não encontrado');
+            }
+
+            const response = await axios.delete(`${apiEndpoint}/receitas/${id}/`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.status === 204) {
+                fetchAllAlarmes();
+            }
+        } catch (err) {
+            console.log('Erro ao buscar alarmes:', err);
+            if (err.response && err.response.status === 401) {
+                // Token inválido ou expirado, redireciona para a tela de login
+                navigation.navigate('Login');
+            }
+        }
+    };
+    
     // Efetua a busca quando o componente está visível
     useEffect(() => {
         if (isFocused) {
@@ -92,9 +117,14 @@ const HomeScreen = () => {
                 <Text style={styles.cardSubtitle}>
                     <Text style={styles.boldText}>Duração do alarme (dias):</Text> {data.alarme.duracao_dias}
                 </Text>
-                <TouchableOpacity style={styles.takeButton}>
-                    <Text style={styles.takeButtonText}>Tomar</Text>
-                </TouchableOpacity>
+                <View style={styles.cardButtonContainer}>
+                    <TouchableOpacity style={[styles.excludeButton, styles.halfWidthButton]} onPress={handleDeleteRecipe(data.id)}>
+                        <Text style={styles.textButton}>Excluir receita</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.takeButton, styles.halfWidthButton]}>
+                        <Text style={styles.textButton}>Tomar</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         );
     }
