@@ -117,6 +117,40 @@ const styles = StyleSheet.create({
         color: '#FFF',
         fontSize: 16,
     },
+    actionButton: {
+        backgroundColor: '#FF9800',  // Cor padronizada para todos os botões
+        paddingVertical: 12,
+        paddingHorizontal: 25,
+        borderRadius: 5,
+        marginHorizontal: 10,  // Espaçamento entre os botões
+        marginTop: 10,  // Margem superior para os botões não ficarem colados nos textos
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    
+    actionButtonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',  // Centraliza os botões horizontalmente
+        alignItems: 'center',  // Alinha verticalmente no centro
+        marginTop: 10,
+    },
+    container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+    actionButton: { backgroundColor: '#3498db', padding: 10, borderRadius: 5 },
+    actionButtonText: { color: '#fff', fontSize: 16 },
+    modal: { justifyContent: 'center', alignItems: 'center' },
+    modalContent: { backgroundColor: 'white', padding: 20, borderRadius: 10, width: 300 },
+    modalText: { fontSize: 18, marginBottom: 15 },
+    button: { backgroundColor: '#2ecc71', padding: 10, margin: 5, borderRadius: 5 },
+    buttonText: { color: '#fff' },
+
+    
+    
 });
 
 export default styles;
