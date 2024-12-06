@@ -179,6 +179,11 @@ const styles = StyleSheet.create({
     modalButtonText: {
         color: 'black',
     },
+    noAlarmText: {
+        marginTop: 20,
+        fontSize: 28,
+        color: '#666',
+    },
     
     
 });

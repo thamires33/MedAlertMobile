@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation, useIsFocused, useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
-import styles from "./styles";
+import styles from "../Home/styles";
 import { apiEndpoint, access_token } from "../../config/Constants";
 
 const MedicamentosScreen = () => {
@@ -60,9 +60,9 @@ const MedicamentosScreen = () => {
                 <Text style={styles.cardSubtitle}>
                     <Text style={styles.boldText}>Horário:</Text> {data.horario}
                 </Text>
-                {data.imagem && (
+                {/* {data.imagem && (
                     <Image source={{ uri: data.imagem }} style={styles.cardImage} />
-                )}
+                )} */}
             </View>
         );
     }
@@ -71,9 +71,9 @@ const MedicamentosScreen = () => {
         <View style={styles.container}>
             <SafeAreaView style={styles.safeArea}>
                 <View style={styles.header}>
-                    <TouchableOpacity onPress={() => navigation.openDrawer()} style={styles.menuIconContainer}>
+                    {/* <TouchableOpacity onPress={() => navigation.openDrawer()} style={styles.menuIconContainer}>
                         <Icon name="menu" size={24} color="#000" />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                     <View style={styles.headerTextContainer}>
                         <Text style={styles.headerTextRegular}>Medicamentos</Text>
                     </View>

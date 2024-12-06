@@ -34,8 +34,9 @@ const HomeScreen = () => {
             Keyboard.dismiss();  // Fecha o teclado caso esteja aberto
         } catch (err) {
             console.log('Erro ao buscar alarmes:', err);
+            navigation.navigate('Login');
             if (err.response && err.response.status === 401) {
-                navigation.navigate('Login');
+                navigation.navigate('login');
             }
         }
     };
@@ -140,9 +141,9 @@ const HomeScreen = () => {
         <View style={styles.container}>
             <SafeAreaView style={styles.safeArea}>
                 <View style={styles.header}>
-                    <TouchableOpacity onPress={() => navigation.openDrawer()} style={styles.menuIconContainer}>
+                    {/* <TouchableOpacity onPress={() => navigation.openDrawer()} style={styles.menuIconContainer}>
                         <Icon name="menu" size={24} color="#000" />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                     <View style={styles.headerTextContainer}>
                         <Text style={styles.headerTextRegular}>MedAlert</Text>
                     </View>

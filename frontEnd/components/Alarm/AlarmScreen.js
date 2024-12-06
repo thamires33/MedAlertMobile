@@ -141,9 +141,9 @@ const AlarmScreen = () => {
     <View style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.openDrawer()} style={styles.menuIconContainer}>
+          {/* <TouchableOpacity onPress={() => navigation.openDrawer()} style={styles.menuIconContainer}>
             <Icon name="menu" size={24} color="#000" />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         <View style={styles.headerTextContainer}>
           <Text style={styles.headerTextRegular}>MedAlert</Text>
@@ -156,12 +156,12 @@ const AlarmScreen = () => {
         </View>
 
         <View style={styles.card}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={styles.backButton}
           >
             <Icon name="arrow-back" size={30} color="#000" />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <Text style={styles.cardTitle}>Cadastrar medicamentos</Text>
           <View style={styles.separator} />
 
