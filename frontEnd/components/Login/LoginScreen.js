@@ -50,7 +50,7 @@ const LoginScreen = ({ navigation }) => {
             const userInfo = await userInfoResponse.json();
             await AsyncStorage.setItem('@user', JSON.stringify(userInfo)); // Usando AsyncStorage
             Alert.alert('Login Successful', `Welcome ${userInfo.name}`);
-            navigation.navigate('Home');
+            navigation.navigate('Drawer');
         } catch (error) {
             Alert.alert('Error', 'Something went wrong during login');
         }
@@ -96,7 +96,7 @@ const LoginScreen = ({ navigation }) => {
                 await AsyncStorage.setItem(access_token, response.data.access); // Usando AsyncStorage para persistir o token
                 await AsyncStorage.setItem(refresh_token, response.data.refresh);
                 Alert.alert('Login realizado com sucesso!');
-                navigation.navigate('Home'); // Navegação para Home após login
+                navigation.navigate('Drawer');
             } else {
                 Alert.alert('Erro', 'Token não encontrado. Verifique a resposta da API.');
             }
@@ -127,7 +127,7 @@ const LoginScreen = ({ navigation }) => {
         });
 
         if (result.success) {
-            navigation.navigate('Home');
+            navigation.navigate('Drawer');
         } else {
             Alert.alert('Falha', 'Autenticação falhou. Tente novamente.');
         }

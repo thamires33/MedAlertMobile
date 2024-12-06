@@ -12,7 +12,7 @@ const LogoffScreen = () => {
       // Limpa todos os dados do AsyncStorage
       await AsyncStorage.clear();
       // Navega de volta para a tela Home
-      navigation.navigate('Home');
+      navigation.navigate('Login');
     } catch (error) {
       console.error('Erro ao limpar AsyncStorage:', error);
     }

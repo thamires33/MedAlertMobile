@@ -8,6 +8,7 @@ import RegisterScreen from './components/Cadastro/RegisterScreen';
 import CadastroScreen from './components/Cadastro/CadastroScreen';
 import ProfileScreen from './components/Profile/ProfileScreen';
 import HomeScreen from './components/Home/HomeScreen';
+import AlarmScreen from './components/Alarm/AlarmScreen';
 
 
 const Stack = createStackNavigator();
@@ -25,6 +26,7 @@ export default function App() {
         <Stack.Screen name="Registro" component={RegisterScreen} />
         <Stack.Screen name="Cadastro" component={CadastroScreen} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
+        <Stack.Screen name="Alarm" component={AlarmScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
