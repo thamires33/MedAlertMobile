@@ -4,6 +4,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import HomeScreen from '../Home/HomeScreen';
 import AlarmScreen from '../Alarm/AlarmScreen';
 import MedicamentosScreen from '../Medicamentos/MedicamentosScreen';
+import LogoffScreen from '../Logoff/LogoffScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -12,8 +13,8 @@ const DrawerNavigator = () => {
     <Drawer.Navigator initialRouteName="Home">
       <Drawer.Screen name="Home" component={HomeScreen} />
       <Drawer.Screen name="Medicamentos" component={MedicamentosScreen} />
-      <Drawer.Screen name="Cadastrar alarme" component={AlarmScreen} />
-      {/* <Drawer.Screen name="Logout" component={} /> */}
+      <Drawer.Screen name="Alarm" component={AlarmScreen} options={{ drawerLabel: 'Cadastrar alarme' }}/>
+      <Drawer.Screen name="Logoff" component={LogoffScreen} />
     </Drawer.Navigator>
   );
 };
