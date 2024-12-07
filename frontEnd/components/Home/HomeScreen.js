@@ -100,16 +100,11 @@ const HomeScreen = () => {
     function Listagem({ data }) {
         return (
             <View style={styles.card}>
-                <Text style={styles.cardTitle}>{data.paciente.first_name} {data.paciente.last_name}</Text>
-                <Text style={styles.cardSubtitle}>
-                    <Text style={styles.boldText}>Medicamento:</Text> {data.medicamento}
-                </Text>
+                <Text style={styles.cardTitle}>{data.medicamento}</Text>
                 <Text style={styles.cardSubtitle}>
                     <Text style={styles.boldText}>Dose:</Text> {data.dose}
                 </Text>
-                <Text style={styles.cardSubtitle}>
-                    <Text style={styles.boldText}>Recomendação:</Text> {data.recomendacao || "Nenhuma recomendação específica"}
-                </Text>
+                
                 <Text style={styles.cardSubtitle}>
                     <Text style={styles.boldText}>Médico responsável:</Text> {data.medico.first_name} {data.medico.last_name}
                 </Text>
@@ -121,6 +116,9 @@ const HomeScreen = () => {
                 </Text>
                 <Text style={styles.cardSubtitle}>
                     <Text style={styles.boldText}>Duração do alarme (dias):</Text> {data.alarme.duracao_dias}
+                </Text>
+                <Text style={styles.cardSubtitle}>
+                    <Text style={styles.boldText}>Recomendação:</Text> {data.recomendacao || "Nenhuma recomendação."}
                 </Text>
                 <View style={styles.cardButtonContainer}>
                     <TouchableOpacity

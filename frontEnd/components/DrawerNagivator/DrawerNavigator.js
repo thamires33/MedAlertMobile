@@ -11,9 +11,9 @@ const Drawer = createDrawerNavigator();
 const DrawerNavigator = () => {
   return (
     <Drawer.Navigator initialRouteName="Medicamentos">
-      <Drawer.Screen name="DrawerHome" component={HomeScreen} options={{drawerLabel: 'Receitas'}}/>
+      <Drawer.Screen name="Home" component={HomeScreen} options={{drawerLabel: 'Receitas'}}/>
       <Drawer.Screen name="Medicamentos" component={MedicamentosScreen} />
-      <Drawer.Screen name="Alarm" component={AlarmScreen} options={{ drawerLabel: 'Cadastrar alarme' }}/>
+      <Drawer.Screen name="Cadastrar medicamento" component={AlarmScreen} options={{ drawerLabel: 'Cadastrar medicamento' }}/>
       <Drawer.Screen name="Logoff" component={LogoffScreen} />
     </Drawer.Navigator>
   );

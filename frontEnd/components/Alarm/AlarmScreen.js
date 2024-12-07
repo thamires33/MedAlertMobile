@@ -85,7 +85,7 @@ const AlarmScreen = () => {
       formData.append("data", data);
       formData.append("horario", selectedTime);
       formData.append("alarme", isAlarmEnabled.toString());
-      formData.append("imagem", image);
+      // formData.append("imagem", image);
 
       if (image) {
         const fileName = image.split("/").pop();
@@ -108,7 +108,7 @@ const AlarmScreen = () => {
 
       if (response.ok) {
         Alert.alert("Sucesso", "Medicamento cadastrado com sucesso!");
-        navigation.navigate("Home", { update: true });
+        navigation.navigate("Medicamentos", { update: true });
       } else {
         console.log("Erro ao cadastrar:", result);
         Alert.alert("Erro", result || "Erro desconhecido");
