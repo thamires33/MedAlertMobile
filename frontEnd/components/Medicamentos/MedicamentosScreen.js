@@ -6,14 +6,21 @@ import {
     ScrollView, 
     TouchableOpacity, 
     Alert, 
-    Modal 
+    Modal,
+    Image 
 } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation, useIsFocused, useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
-import styles from "../Home/styles";
+import styles from "./styles";
 import { apiEndpoint, access_token } from "../../config/Constants";
+
+const formatDate = (dateString) => {
+    const [year, month, day] = dateString.split("-");
+    return `${day}/${month}/${year}`;
+};
+
 
 const MedicamentosScreen = () => {
     const navigation = useNavigation();
@@ -79,26 +86,49 @@ const MedicamentosScreen = () => {
     // Componente de renderização do medicamento
     const MedicamentoCard = ({ data }) => (
         <View style={styles.card}>
-            <Text style={styles.cardTitle}>{data.nome}</Text>
-            <Text style={styles.cardSubtitle}>
-                <Text style={styles.boldText}>Dose:</Text> {data.dose}
-            </Text>
-            <Text style={styles.cardSubtitle}>
-                <Text style={styles.boldText}>Intervalo:</Text> {data.intervalo_horas} horas
-            </Text>
-            <Text style={styles.cardSubtitle}>
-                <Text style={styles.boldText}>Recomendação:</Text> {data.recomendacao || "Nenhuma recomendação"}
-            </Text>
-            <View style={styles.cardButtonContainer}>
-                <TouchableOpacity
-                    style={[styles.excludeButton, styles.halfWidthButton]}
-                    onPress={() => confirmDelete(data.id)}
-                >
-                    <Text style={styles.textButton}>Excluir Medicamento</Text>
-                </TouchableOpacity>
+            <View style={styles.cardContent}>
+                {/* Área dos dados */}
+                <View style={styles.cardTextContainer}>
+                    <Text style={styles.cardTitle}>{data.nome}</Text>
+                    <Text style={styles.cardSubtitle}>
+                        <Text style={styles.boldText}>Dosagem:</Text> {data.dosagem} {data.unidade}
+                    </Text>
+                    <Text style={styles.cardSubtitle}>
+                        <Text style={styles.boldText}>Frequência:</Text> {data.frequencia} horas
+                    </Text>
+                    <Text style={styles.cardSubtitle}>
+                        <Text style={styles.boldText}>Data:</Text> {formatDate(data.data)}
+                    </Text>
+                    <Text style={styles.cardSubtitle}>
+                        <Text style={styles.boldText}>Horário:</Text> {data.horario}
+                    </Text>
+                </View>
+                
+                {/* Área da imagem */}
+                {data.imagem ? (
+                    <Image
+                        source={{ uri: data.imagem }}
+                        style={styles.cardImage}
+                        resizeMode="cover"
+                    />
+                ) : (
+                    <View style={styles.cardPlaceholderImage}>
+                        <Text style={styles.cardPlaceholderText}>Sem Imagem</Text>
+                    </View>
+                )}
             </View>
+    
+            {/* Botão cobrindo todo o fundo */}
+            <TouchableOpacity
+                style={styles.excludeButton}
+                onPress={() => confirmDelete(data.id)}
+            >
+                <Text style={styles.textButton}>Excluir Medicamento</Text>
+            </TouchableOpacity>
         </View>
     );
+    
+    
 
     return (
         <View style={styles.container}>
